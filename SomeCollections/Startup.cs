@@ -31,6 +31,7 @@ namespace SomeCollections
                 options.Password.RequireLowercase = false;
                 options.Password.RequireDigit = false;
                 options.User.RequireUniqueEmail = true;
+                options.ClaimsIdentity.RoleClaimType = "user";
             })
                 .AddEntityFrameworkStores<ApplicationContext>();
 
