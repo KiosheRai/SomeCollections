@@ -1,26 +1,27 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SomeCollections.Models;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace SomeCollections.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly ApplicationContext _db;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, ApplicationContext db)
         {
             _logger = logger;
+            _db = db;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
-            return View();
+            var item = _db.Items.ToList();
+            return View(item);
         }
 
         public IActionResult Privacy()

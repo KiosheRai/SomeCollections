@@ -9,11 +9,11 @@ using Microsoft.AspNetCore.Authorization;
 namespace CustomIdentityApp.Controllers
 {
     [Authorize(Roles = "admin")]
-    public class UsersController : Controller
+    public class AdminController : Controller
     {
         UserManager<User> _userManager;
 
-        public UsersController(UserManager<User> userManager)
+        public AdminController(UserManager<User> userManager)
         {
             _userManager = userManager;
         }
@@ -50,21 +50,21 @@ namespace CustomIdentityApp.Controllers
             
             return RedirectToAction("Index");
         }
-        [Authorize]
-        public async Task<ActionResult> ChangeRole(string id)
-        {
-            User user = await _userManager.FindByIdAsync(id);
-            if (user.LockoutEnd == null)
-            {
-                user.LockoutEnd = System.DateTimeOffset.Now.AddYears(100);
-            }
-            else
-            {
-                user.LockoutEnd = null;
-            }
-            await _userManager.UpdateAsync(user);
+        //[Authorize]
+        //public async Task<ActionResult> ChangeRole(string id)
+        //{
+        //    User user = await _userManager.FindByIdAsync(id);
+        //    if (user.LockoutEnd == null)
+        //    {
+        //        user.LockoutEnd = System.DateTimeOffset.Now.AddYears(100);
+        //    }
+        //    else
+        //    {
+        //        user.LockoutEnd = null;
+        //    }
+        //    await _userManager.UpdateAsync(user);
 
-            return RedirectToAction("Index");
-        }
+        //    return RedirectToAction("Index");
+        //}
     }
 }

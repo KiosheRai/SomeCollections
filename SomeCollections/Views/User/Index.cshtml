@@ -1,0 +1,40 @@
+﻿@model IEnumerable<SomeCollections.Models.Item>
+
+@{
+    ViewData["Title"] = "Личные коллекции";
+}
+
+<div>
+    <ol>
+        <li>
+            <a asp-controller="User" asp-action="Create">Добавить коллецию</a>
+        </li>
+    </ol>
+
+    <h1>Ваши коллекции:</h1>
+
+    <div class="container mt-5">
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        <form asp-action="Delete" asp-route-id="@item.Id" method="post">
+
+                            <div class="card-body">
+                                <h5 class="card-title">@item.Name</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">Тут @item.UserName</h6>
+                                <p class="card-text">@item.Description</p>
+                                <h5 class="card-subtitle mb-2 text-muted">@item.Likes</h5>
+                                <a  class="btn btn-sm btn-primary text-white">Редактировать</a>
+                                <button type="submit" class="btn btn-sm btn-danger">
+                                    Удалить
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

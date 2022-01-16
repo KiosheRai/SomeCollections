@@ -1,8 +1,27 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model IEnumerable<SomeCollections.Models.Item>
+
+@{
+    ViewData["Title"] = "Главная";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<h1>Все коллекции:</h1>
+
+<div>
+    <div class="container mt-5">
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">@item.Name</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">Тут @item.UserName</h6>
+                            <p class="card-text">@item.Description</p>
+                            <h5 class="card-subtitle mb-2 text-muted">@item.Likes</h5>
+                        </div>     
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
 </div>

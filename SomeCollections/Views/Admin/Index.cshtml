@@ -1,0 +1,41 @@
+﻿@model IEnumerable<SomeCollections.Models.User>
+@{
+    ViewBag.Title = "Список пользователей";
+}
+
+<a asp-action="Create">Добавить пользователя</a>
+
+<table class="table">
+    <tr><th>Email</th><th>Логин</th><th></th></tr>
+    @foreach (var user in Model)
+    {
+        <tr>
+            @if (user.LockoutEnd != null)
+            {
+                <td><span class="text-danger">@user.Email</span></td>
+                <td><span class="text-danger">@user.UserName</span></td>
+            }
+            else
+            {
+                <td>@user.Email</td>
+                <td>@user.UserName</td>
+            }
+            <td>
+                <form asp-action="Delete" asp-route-id="@user.Id" method="post">
+                    <a class="btn btn-sm btn-primary" asp-action="Edit" asp-route-id="@user.Id">Просмотреть</a>
+                    @if (user.LockoutEnd == null)
+                    {
+                        <a class="btn btn-sm btn-primary" asp-action="Blocking" asp-route-id="@user.Id">Блокировать</a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-sm btn-primary" asp-action="Blocking" asp-route-id="@user.Id">Разборкировать</a>
+                    }
+                    <button type="submit" class="btn btn-sm btn-danger">
+                        Удалить
+                    </button>
+                </form>
+            </td>
+        </tr>
+    }
+</table>
