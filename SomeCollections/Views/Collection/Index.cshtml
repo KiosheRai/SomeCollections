@@ -1,0 +1,44 @@
+﻿@model IEnumerable<SomeCollections.Models.Collection>
+
+@{
+    ViewData["Title"] = "Личные коллекции";
+}
+
+<div>
+    <ol>
+        <li>
+            <a asp-action="Create">Добавить коллецию</a>
+        </li>
+    </ol>
+
+    <h1>Ваши коллекции:</h1>
+
+    <div class="container mt-5">
+        <div class="row">
+            @if(Model == null)
+            {
+            <h1 class="text-center ">У вас нету собственных коллекций.</h1>
+            }
+            @foreach (var item in Model)
+            {
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        <form asp-action="Delete" asp-route-id="@item.Id" method="post">
+
+                            <div class="card-body">
+                                <h4 class="card-title text-center">@item.Name</h4>
+                                <h6 class="card-subtitle mb-2 text-muted text-center">Автор: @item.UserName</h6>
+                                <p class="card-text">@item.Description</p>
+                                <a class="btn btn-sm btn-primary text-white">Редактировать</a>
+                                <a class="btn btn-sm btn-primary text-white" asp-controller="Item" asp-action="Index" asp-route-id="@item.Id">Посмотреть</a>
+                                <button type="submit" class="btn btn-sm btn-danger">
+                                    Удалить
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

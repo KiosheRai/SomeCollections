@@ -1,4 +1,4 @@
-﻿@model IEnumerable<SomeCollections.Models.Item>
+﻿@model ICollection<SomeCollections.Models.Collection>
 
 @{
     ViewData["Title"] = "Главная";
@@ -14,10 +14,9 @@
                 <div class="col-md-4">
                     <div class="card mb-4">
                         <div class="card-body">
-                            <h5 class="card-title">@item.Name</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">Тут @item.UserName</h6>
+                            <h4 class="card-title text-center">@item.Name</h4>
+                            <h6 class="card-subtitle mb-2 text-muted text-center">Автор: @item.UserName</h6>
                             <p class="card-text">@item.Description</p>
-                            <h5 class="card-subtitle mb-2 text-muted">@item.Likes</h5>
                         </div>     
                     </div>
                 </div>

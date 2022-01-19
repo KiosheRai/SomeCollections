@@ -20,7 +20,7 @@ namespace SomeCollections.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            var item = _db.Items.ToList();
+            var item = _db.Collections.ToList();
             return View(item);
         }
 

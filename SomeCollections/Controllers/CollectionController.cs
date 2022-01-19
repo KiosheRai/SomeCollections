@@ -2,17 +2,18 @@
 using Microsoft.AspNetCore.Mvc;
 using SomeCollections.Models;
 using SomeCollections.ViewModels;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace SomeCollections.Controllers
 {
     [Authorize]
-    public class UserController : Controller
+    public class CollectionController : Controller
     {
         private readonly ApplicationContext _db;
 
-        public UserController(ApplicationContext db)
+        public CollectionController(ApplicationContext db)
         {
             _db = db;
         }
@@ -20,7 +21,7 @@ namespace SomeCollections.Controllers
         public IActionResult Index()
         {
             ViewData["Title"] = "Личный кабинет";
-            var Items = _db.Items.Where(p => p.User.UserName == User.Identity.Name);
+            var Items = _db.Collections.Where(p => p.Owner.UserName == User.Identity.Name);
             return View(Items);
         }
 
@@ -35,26 +36,37 @@ namespace SomeCollections.Controllers
         [Authorize]
         public async Task<IActionResult> Create(CreateCollectionsViewModel model)
         {
-            Item item = new Item
+            Collection item = new Collection
             {
                 Name = model.Name,
                 Description = model.Description,
                 UserName = User.Identity.Name,
-                User = _db.Users.FirstOrDefault(p => p.UserName == User.Identity.Name),
+                Owner = _db.Users.FirstOrDefault(p => p.UserName == User.Identity.Name),
+                CountItems = 0,
             };
             _db.Add(item);
             await _db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 
+        [HttpGet]
+        [Authorize]
+        public IActionResult CurrentCollectuin(Guid id)
+        {
+            ViewBag.Name = _db.Collections.FirstOrDefault(p => p.Id == id).Name;
+            var collection = _db.Collections.Where(p => p.Id == id);
+            return View(collection);
+        }
+
         [Authorize]
         [HttpPost]
-        public async Task<ActionResult> Delete(string id)
+        public async Task<ActionResult> Delete(Guid id)
         {
-            Item item = _db.Items.FirstOrDefault(p => p.Id == id);
+            Collection item = _db.Collections.FirstOrDefault(p => p.Id == id);
+
             if (item != null)
             {
-                _db.Items.Remove(item);
+                _db.Collections.Remove(item);
                 await _db.SaveChangesAsync();
             }
             return RedirectToAction("Index");

@@ -5,6 +5,7 @@ namespace SomeCollections.Models
 {
     public class User: IdentityUser
     {
-        //IEnumerable<Item> ListItems { get; set; }
+        public virtual ICollection<Collection> ListCollections { get; set; }
+        public virtual ICollection<Item> ListItems { get; set; }
     }
 }

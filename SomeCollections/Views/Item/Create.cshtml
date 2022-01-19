@@ -1,9 +1,9 @@
-﻿@model SomeCollections.ViewModels.CreateCollectionsViewModel
+﻿@model SomeCollections.ViewModels.CreateItemViewModel
 @{
-    ViewData["Title"] = "Создание коллекции";
+    ViewData["Title"] = "Создание айтема";
 }
 
-<form asp-action="Create" asp-controller="User">
+<form asp-action="Create">
     <div asp-validation-summary="All" class="text-danger"></div>
     <div class="form-group">
         <label asp-for="Name" class="control-label">Название</label>
@@ -14,6 +14,6 @@
         <input type="text" asp-for="Description" class="form-control" />
     </div>
     <div class="form-group">
-        <input type="submit" value="Добавить" class="btn btn-outline-secondary" />
+        <input type="submit" asp-route-Id="@ViewBag.CollectionId" value="Добавить" class="btn btn-outline-secondary" />
     </div>
 </form>

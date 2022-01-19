@@ -1,9 +1,9 @@
-﻿using SomeCollections.Models;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace SomeCollections.ViewModels
 {
-    public class CreateCollectionsViewModel
+    public class CreateItemViewModel
     {
         [Required(ErrorMessage = "Пустое поле!")]
         [Display(Name = "Name")]

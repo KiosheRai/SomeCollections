@@ -7,11 +7,11 @@
 <div>
     <ol>
         <li>
-            <a asp-controller="User" asp-action="Create">Добавить коллецию</a>
+            <a asp-action="Create" asp-route-Id="@ViewBag.CollectionId">Добавить айтем</a>
         </li>
     </ol>
 
-    <h1>Ваши коллекции:</h1>
+    <h1>Коллекция: @ViewBag.Name</h1>
 
     <div class="container mt-5">
         <div class="row">
@@ -22,11 +22,13 @@
                         <form asp-action="Delete" asp-route-id="@item.Id" method="post">
 
                             <div class="card-body">
-                                <h5 class="card-title">@item.Name</h5>
-                                <h6 class="card-subtitle mb-2 text-muted">Тут @item.UserName</h6>
+                                <h4 class="card-title text-center">@item.Name</h4>
+                                <h6 class="card-subtitle mb-2 text-muted text-center">Автор: @item.UserName</h6>
                                 <p class="card-text">@item.Description</p>
-                                <h5 class="card-subtitle mb-2 text-muted">@item.Likes</h5>
-                                <a  class="btn btn-sm btn-primary text-white">Редактировать</a>
+                                <h5 class="card-subtitle mb-1 text-muted text-right">
+                                    <img src="~/pic/LikeButton.webp" height="20" width="20" alt="Like" /> @item.Likes
+                                </h5>
+                                <a class="btn btn-sm btn-primary text-white">Редактировать</a>
                                 <button type="submit" class="btn btn-sm btn-danger">
                                     Удалить
                                 </button>

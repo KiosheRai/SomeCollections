@@ -12,7 +12,7 @@
             </li>
         }
         <li class="nav-item">
-            <a class="nav-link text-dark fw-weight-bolder" asp-controller="User" asp-action="Index" title="Личный кабинет">@User.Identity.Name</a>
+            <a class="nav-link text-dark fw-weight-bolder" asp-controller="Collection" asp-action="Index" title="Личный кабинет">@User.Identity.Name</a>
         </li>
         <li class="nav-item">
             <form class="form-inline" asp-controller="Account" asp-action="Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
