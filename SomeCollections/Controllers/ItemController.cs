@@ -64,14 +64,21 @@ namespace SomeCollections.Controllers
         [HttpPost]
         public async Task<ActionResult> Delete(Guid id)
         {
+            
             Item item = _db.Items.FirstOrDefault(p => p.Id == id);
-
-            if (item != null)
+            Collection col = _db.Collections.FirstOrDefault(p=>p.Id == _db.Items.FirstOrDefault(s=>s.Id == id).Collection.Id);
+            
+            if (item != null && col != null)
             {
+                col.CountItems -= 1;
                 _db.Items.Remove(item);
                 await _db.SaveChangesAsync();
             }
-            return RedirectToAction("Index");
+            else
+            {
+                return NotFound();
+            }
+            return RedirectToAction("Index", "Item", new { col.Id });
         }
     }
 }

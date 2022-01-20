@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace SomeCollections.Models
@@ -8,6 +7,7 @@ namespace SomeCollections.Models
     {
         public DbSet<Item> Items { get; set; }
         public DbSet<Collection> Collections { get; set; }
+        public DbSet<Like> Likes { get; set; }
 
         public ApplicationContext(DbContextOptions<ApplicationContext> options)
             : base(options)

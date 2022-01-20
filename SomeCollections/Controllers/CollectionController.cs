@@ -62,13 +62,18 @@ namespace SomeCollections.Controllers
         [HttpPost]
         public async Task<ActionResult> Delete(Guid id)
         {
-            Collection item = _db.Collections.FirstOrDefault(p => p.Id == id);
-
-            if (item != null)
+            Collection col = _db.Collections.FirstOrDefault(p => p.Id == id);
+            var items = _db.Items.Where(p => p.Collection.Id == id).ToList();
+            if (col == null)
             {
-                _db.Collections.Remove(item);
-                await _db.SaveChangesAsync();
+                return NotFound();
             }
+            _db.Collections.Remove(col);
+            foreach(var x in items)
+            {
+                _db.Items.Remove(x);
+            }
+            await _db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
     }

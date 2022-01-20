@@ -29,6 +29,7 @@
                                 <h4 class="card-title text-center">@item.Name</h4>
                                 <h6 class="card-subtitle mb-2 text-muted text-center">Автор: @item.UserName</h6>
                                 <p class="card-text">@item.Description</p>
+                                <h6 class="text-muted">Элементов: @item.CountItems</h6>
                                 <a class="btn btn-sm btn-primary text-white">Редактировать</a>
                                 <a class="btn btn-sm btn-primary text-white" asp-controller="Item" asp-action="Index" asp-route-id="@item.Id">Посмотреть</a>
                                 <button type="submit" class="btn btn-sm btn-danger">
