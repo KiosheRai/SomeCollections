@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SomeCollections.ViewModels
 {
-    public class CreateItemViewModel
+    public class ItemViewModel
     {
         [Required(ErrorMessage = "Пустое поле!")]
         [Display(Name = "Name")]

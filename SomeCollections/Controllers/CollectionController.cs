@@ -34,19 +34,23 @@ namespace SomeCollections.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> Create(CreateCollectionsViewModel model)
+        public async Task<IActionResult> Create(CollectionsViewModel model)
         {
-            Collection item = new Collection
+            if (ModelState.IsValid)
             {
-                Name = model.Name,
-                Description = model.Description,
-                UserName = User.Identity.Name,
-                Owner = _db.Users.FirstOrDefault(p => p.UserName == User.Identity.Name),
-                CountItems = 0,
-            };
-            _db.Add(item);
-            await _db.SaveChangesAsync();
-            return RedirectToAction("Index");
+                Collection item = new Collection
+                {
+                    Name = model.Name,
+                    Description = model.Description,
+                    UserName = User.Identity.Name,
+                    Owner = _db.Users.FirstOrDefault(p => p.UserName == User.Identity.Name),
+                    CountItems = 0,
+                };
+                _db.Add(item);
+                await _db.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+            return View(model);
         }
 
         [HttpGet]
@@ -56,6 +60,32 @@ namespace SomeCollections.Controllers
             ViewBag.Name = _db.Collections.FirstOrDefault(p => p.Id == id).Name;
             var collection = _db.Collections.Where(p => p.Id == id);
             return View(collection);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult Edit(Guid id)
+        {
+            var collection = _db.Collections.FirstOrDefault(p => p.Id == id);
+            ViewBag.Name = collection.Name;
+            ViewBag.ColId = collection.Id;
+            CollectionsViewModel colView = new CollectionsViewModel
+            {
+                Name = collection.Name,
+                Description = collection.Description,
+            };
+            return View(colView);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Edit(Guid id, CollectionsViewModel model)
+        {
+            var s = _db.Collections.FirstOrDefault(p => p.Id == id);
+            s.Name = model.Name;
+            s.Description = model.Description;
+            await _db.SaveChangesAsync();
+            return RedirectToAction("Index");
         }
 
         [Authorize]

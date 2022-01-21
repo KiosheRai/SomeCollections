@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SomeCollections.Models;
 using SomeCollections.ViewModels;
 using System;
@@ -38,7 +39,7 @@ namespace SomeCollections.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> Create(CreateItemViewModel model, Guid Id)
+        public async Task<IActionResult> Create(ItemViewModel model, Guid Id)
         {
             if (ModelState.IsValid)
             {
@@ -60,13 +61,40 @@ namespace SomeCollections.Controllers
             
         }
 
+        [HttpGet]
+        [Authorize]
+        public IActionResult Edit(Guid id)
+        {
+            var item = _db.Items.Include(x=>x.Collection).FirstOrDefault(p => p.Id == id);
+            ViewBag.Name = item.Name;
+            ViewBag.ItemId = item.Id;
+            ViewBag.ColId = item.Collection.Id;
+            ItemViewModel colView = new ItemViewModel
+            {
+                Name = item.Name,
+                Description = item.Description,
+            };
+            return View(colView);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Edit(Guid id, ItemViewModel model)
+        {
+            Item s = _db.Items.Include(x=>x.Collection).FirstOrDefault(p => p.Id == id);
+            s.Name = model.Name;
+            s.Description = model.Description;
+            await _db.SaveChangesAsync();
+            return RedirectToAction("Index", "Item", new { s.Collection.Id });
+        }
+
         [Authorize]
         [HttpPost]
         public async Task<ActionResult> Delete(Guid id)
         {
             
-            Item item = _db.Items.FirstOrDefault(p => p.Id == id);
-            Collection col = _db.Collections.FirstOrDefault(p=>p.Id == _db.Items.FirstOrDefault(s=>s.Id == id).Collection.Id);
+            Item item = _db.Items.Include(x=>x.Collection).FirstOrDefault(p => p.Id == id);
+            Collection col = _db.Collections.FirstOrDefault(p=>p.Id == item.Collection.Id);
             
             if (item != null && col != null)
             {
