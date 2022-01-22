@@ -1,11 +1,12 @@
 ﻿@model IEnumerable<SomeCollections.Models.User>
 @{
-    ViewBag.Title = "Список пользователей";
+    ViewBag.Title = "Список админов";
 }
 
-<a asp-action="Admins" class="btn-outline-info">Перейти к админам</a>
+<a asp-action="Index" class="btn-outline-info">Перейти к пользователям</a>
 
-<h2 class="text-center">Список пользователей</h2>
+<h2 class="text-center">Список администраторов</h2>
+
 <table class="table">
     <tr><th>Email</th><th>Логин</th><th></th></tr>
     @foreach (var user in Model)
@@ -32,7 +33,7 @@
                     {
                         <a class="btn btn-sm btn-primary" asp-action="Blocking" asp-route-id="@user.Id">Разборкировать</a>
                     }
-                    <a class="btn btn-sm btn-primary" asp-action="ChangeRoleToAdmin" asp-route-id="@user.Id">Дать админку</a>
+                    <a class="btn btn-sm btn-primary" asp-action="ChangeRoleToUser" asp-route-id="@user.Id">Убрать админку</a>
                     <button type="submit" class="btn btn-sm btn-danger">
                         Удалить
                     </button>
