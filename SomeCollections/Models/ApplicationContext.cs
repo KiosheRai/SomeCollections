@@ -18,7 +18,7 @@ namespace SomeCollections.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Item>().Property(u => u.Likes).HasDefaultValue(0);
+            modelBuilder.Entity<Item>().Property(u => u.LikeCount).HasDefaultValue(0);
             modelBuilder.Entity<Collection>().Property(u => u.CountItems).HasDefaultValue(0);
         }
     }

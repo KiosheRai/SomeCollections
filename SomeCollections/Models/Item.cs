@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -14,6 +15,7 @@ namespace SomeCollections.Models
         public string UserName { get; set; }
         public virtual User Owner { get; set; }
         public virtual Collection Collection { get; set; }
-        public int Likes { get; set; }
+        public int LikeCount { get; set; }
+        public virtual ICollection<Like> Likes { get; set; }
     }
 }
