@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SomeCollections.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace SomeCollections.ViewModels
 {
@@ -10,5 +11,9 @@ namespace SomeCollections.ViewModels
         [Required(ErrorMessage = "Пустое поле!")]
         [Display(Name = "Description")]
         public string Description { get; set; }
+
+        [Required(ErrorMessage = "Требуется выбор!")]
+        [Display(Name = "Theme")]
+        public int Tag { get; set; }
     }
 }

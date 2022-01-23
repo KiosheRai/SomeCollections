@@ -22,14 +22,14 @@ namespace SomeCollections.Controllers
         public IActionResult Index()
         {
             ViewData["Title"] = "Личный кабинет";
-            var Items = _db.Collections.Where(p => p.Owner.UserName == User.Identity.Name);
+            var Items = _db.Collections.Include(x=>x.Tag).Where(p => p.Owner.UserName == User.Identity.Name);
             return View(Items);
         }
 
         [AllowAnonymous]
         public IActionResult AllCollections()
         {
-            var item = _db.Collections.Include(p=>p.Owner).ToList();
+            var item = _db.Collections.Include(p=>p.Owner).Include(x=>x.Tag).ToList();
             return View(item);
         }
 
@@ -37,6 +37,7 @@ namespace SomeCollections.Controllers
         [Authorize]
         public IActionResult Create()
         {
+            ViewBag.Themes = _db.Tags.ToList();
             return View();
         }
 
@@ -52,12 +53,14 @@ namespace SomeCollections.Controllers
                     Description = model.Description,
                     UserName = User.Identity.Name,
                     Owner = _db.Users.FirstOrDefault(p => p.UserName == User.Identity.Name),
+                    Tag = _db.Tags.FirstOrDefault(p=>p.Id == model.Tag),
                     CountItems = 0,
                 };
                 _db.Add(item);
                 await _db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
+            ViewBag.Themes = _db.Tags.ToList();
             return View(model);
         }
 
@@ -82,6 +85,7 @@ namespace SomeCollections.Controllers
                 Name = collection.Name,
                 Description = collection.Description,
             };
+            ViewBag.Themes = _db.Tags.ToList();
             return View(colView);
         }
 
@@ -92,6 +96,7 @@ namespace SomeCollections.Controllers
             var s = _db.Collections.FirstOrDefault(p => p.Id == id);
             s.Name = model.Name;
             s.Description = model.Description;
+            s.Tag = _db.Tags.FirstOrDefault(p => p.Id == model.Tag);
             await _db.SaveChangesAsync();
             return RedirectToAction("Index");
         }

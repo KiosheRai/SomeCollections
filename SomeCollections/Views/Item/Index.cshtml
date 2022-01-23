@@ -5,11 +5,9 @@
 }
 
 <div>
-    <ol>
-        <li>
-            <a asp-action="Create" asp-route-Id="@ViewBag.CollectionId">Добавить айтем</a>
-        </li>
-    </ol>
+    <div>
+        <a class="btn-outline-info" asp-action="Create" asp-route-Id="@ViewBag.CollectionId">Добавить айтем</a>
+    </div>
 
     <h1>Коллекция: @ViewBag.Name</h1>
 
@@ -42,7 +40,7 @@
                         </form>
                     </div>
                 </div>
-            }
+                }
+            </div>
         </div>
     </div>
-</div>
