@@ -20,8 +20,7 @@ namespace SomeCollections.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            var item = _db.Collections.ToList();
-            return View(item);
+            return RedirectToAction("AllCollections", "Collection");
         }
 
         public IActionResult Privacy()

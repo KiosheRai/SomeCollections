@@ -18,15 +18,25 @@ namespace SomeCollections.Controllers
         {
             _db = db;
         }
-        [Authorize]
+        [AllowAnonymous]
         public IActionResult Index(Guid Id)
         {
             var Collection = _db.Collections.FirstOrDefault(p => p.Id == Id);
             ViewData["Title"] = Collection.Name.ToString();
             ViewBag.Name = Collection.Name.ToString();
             ViewBag.CollectionId = Id;
-            var Items = _db.Items.Where(p => p.Collection.Id == Id);
+            var Items = _db.Items.Include(x=>x.Owner).Where(p => p.Collection.Id == Id);
             return View(Items);
+        }
+
+        [AllowAnonymous]
+        public IActionResult CurrentItem(Guid Id)
+        {
+            var item = _db.Items.Include(s=>s.Collection).FirstOrDefault(p => p.Id == Id);
+            Collection col = _db.Collections.FirstOrDefault(p => p.Id == item.Collection.Id);
+            ViewBag.NameCollection = col.Name;
+            ViewBag.IdCollection = col.Id;
+            return View(item);
         }
 
         [HttpGet]

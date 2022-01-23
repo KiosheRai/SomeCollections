@@ -1,4 +1,4 @@
-﻿@model IEnumerable<SomeCollections.Models.Item>
+﻿@model IEnumerable<SomeCollections.Models.Collection>
 
 @{
     ViewData["Title"] = "Личные коллекции";
@@ -7,14 +7,18 @@
 <div>
     <ol>
         <li>
-            <a asp-action="Create" asp-route-Id="@ViewBag.CollectionId">Добавить айтем</a>
+            <a asp-action="Create">Добавить коллецию</a>
         </li>
     </ol>
 
-    <h1>Коллекция: @ViewBag.Name</h1>
+    <h1>Ваши коллекции:</h1>
 
     <div class="container mt-5">
         <div class="row">
+            @if (Model == null)
+            {
+                <h1 class="text-center ">У вас нету собственных коллекций.</h1>
+            }
             @foreach (var item in Model)
             {
                 <div class="col-md-4">
@@ -25,14 +29,13 @@
                                 <h4 class="card-title text-center">@item.Name</h4>
                                 <h6 class="card-subtitle mb-2 text-muted text-center">Автор: @item.UserName</h6>
                                 <p class="card-text">@item.Description</p>
-                                <h5 class="card-subtitle mb-1 text-muted text-right">
-                                    <img src="~/pic/LikeButton.webp" height="20" width="20" alt="Like" /> @item.LikeCount
-                                </h5>
-                                <a class="btn btn-sm btn-primary text-white" asp-action="CurrentItem" asp-route-Id="@item.Id">Посмотреть</a>
+                                <h6 class="text-muted">Элементов: @item.CountItems</h6>
+                                <a class="btn btn-sm btn-primary text-white" asp-controller="Item" asp-action="Index" asp-route-id="@item.Id">Посмотреть</a>
                                 @if (User.Identity.IsAuthenticated)
                                 {
                                     @if (User.IsInRole("admin") || User.Identity.Name.Equals(item.Owner.UserName))
-                                    {<a class="btn btn-sm btn-primary text-white" asp-action="Edit" asp-route-Id="@item.Id">Редактировать</a>
+                                    {
+                                        <a class="btn btn-sm btn-primary text-white" asp-action="Edit" asp-route-id="@item.Id">Редактировать</a>
                                         <button type="submit" class="btn btn-sm btn-danger">
                                             Удалить
                                         </button>

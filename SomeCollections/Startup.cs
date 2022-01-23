@@ -34,6 +34,7 @@ namespace SomeCollections
             })
                 .AddEntityFrameworkStores<ApplicationContext>();
 
+            services.AddSignalR();
             services.AddControllersWithViews();
         }
 
@@ -60,7 +61,8 @@ namespace SomeCollections
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Collection}/{action=AllCollections}/{id?}");
+                endpoints.MapHub<PostHub>("/Post");
             });
         }
     }

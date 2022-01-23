@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SomeCollections.Models;
 using SomeCollections.ViewModels;
 using System;
@@ -23,6 +24,13 @@ namespace SomeCollections.Controllers
             ViewData["Title"] = "Личный кабинет";
             var Items = _db.Collections.Where(p => p.Owner.UserName == User.Identity.Name);
             return View(Items);
+        }
+
+        [AllowAnonymous]
+        public IActionResult AllCollections()
+        {
+            var item = _db.Collections.Include(p=>p.Owner).ToList();
+            return View(item);
         }
 
         [HttpGet]
