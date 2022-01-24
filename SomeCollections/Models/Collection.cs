@@ -8,11 +8,13 @@ namespace SomeCollections.Models
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public string UserName { get; set; }
-        public virtual User Owner { get; set; }
+        public string ImgPass { get; set; }
         public int CountItems { get; set; }
 
+        public virtual User Owner { get; set; }
+        public virtual Tag Tag { get; set; }
+
         public virtual ICollection<Item> Items { get; set; }
-        public virtual Tag Tag { get;  set; }
+        
     }
 }

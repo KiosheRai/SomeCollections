@@ -10,7 +10,7 @@
                         @Model.Name
                     </div>
                     <div class="card-body">
-                        <h4 class="card-title text-muted">Автор: @Model.UserName</h4>
+                        <h4 class="card-title text-muted">Автор: @Model.Owner.UserName</h4>
                         <p class="card-text">@Model.Description</p>
                         <a class="btn btn-outline-primary" asp-route-Id="@ViewBag.IdCollection" asp-action="Index">Назад</a>
                     </div>

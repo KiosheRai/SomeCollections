@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -61,7 +60,7 @@ namespace SomeCollections
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Collection}/{action=AllCollections}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapHub<PostHub>("/Post");
             });
         }

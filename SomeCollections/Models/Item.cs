@@ -12,10 +12,12 @@ namespace SomeCollections.Models
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public string UserName { get; set; }
+
         public virtual User Owner { get; set; }
         public virtual Collection Collection { get; set; }
+
         public int LikeCount { get; set; }
+
         public virtual ICollection<Like> Likes { get; set; }
     }
 }

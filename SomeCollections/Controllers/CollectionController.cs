@@ -22,7 +22,7 @@ namespace SomeCollections.Controllers
         public IActionResult Index()
         {
             ViewData["Title"] = "Личный кабинет";
-            var Items = _db.Collections.Include(x=>x.Tag).Where(p => p.Owner.UserName == User.Identity.Name);
+            var Items = _db.Collections.Include(x=>x.Tag).Include(s=>s.Owner).Where(p => p.Owner.UserName == User.Identity.Name);
             return View(Items);
         }
 
@@ -51,7 +51,6 @@ namespace SomeCollections.Controllers
                 {
                     Name = model.Name,
                     Description = model.Description,
-                    UserName = User.Identity.Name,
                     Owner = _db.Users.FirstOrDefault(p => p.UserName == User.Identity.Name),
                     Tag = _db.Tags.FirstOrDefault(p=>p.Id == model.Tag),
                     CountItems = 0,
@@ -69,7 +68,7 @@ namespace SomeCollections.Controllers
         public IActionResult CurrentCollectuin(Guid id)
         {
             ViewBag.Name = _db.Collections.FirstOrDefault(p => p.Id == id).Name;
-            var collection = _db.Collections.Where(p => p.Id == id);
+            var collection = _db.Collections.Include(o=>o.Owner).Where(p => p.Id == id);
             return View(collection);
         }
 

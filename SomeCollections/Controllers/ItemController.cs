@@ -32,7 +32,7 @@ namespace SomeCollections.Controllers
         [AllowAnonymous]
         public IActionResult CurrentItem(Guid Id)
         {
-            var item = _db.Items.Include(s=>s.Collection).FirstOrDefault(p => p.Id == Id);
+            var item = _db.Items.Include(s=>s.Collection).Include(o=>o.Owner).FirstOrDefault(p => p.Id == Id);
             Collection col = _db.Collections.FirstOrDefault(p => p.Id == item.Collection.Id);
             ViewBag.NameCollection = col.Name;
             ViewBag.IdCollection = col.Id;
@@ -59,7 +59,6 @@ namespace SomeCollections.Controllers
                 {
                     Name = model.Name,
                     Description = model.Description,
-                    UserName = User.Identity.Name,
                     Owner = _db.Users.FirstOrDefault(p => p.UserName == User.Identity.Name),
                     Collection = _db.Collections.FirstOrDefault(p => p.Id == Id),
                 };
