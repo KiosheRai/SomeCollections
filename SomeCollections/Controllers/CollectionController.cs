@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SomeCollections.Models;
 using SomeCollections.ViewModels;
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,12 +16,14 @@ namespace SomeCollections.Controllers
     public class CollectionController : Controller
     {
         private readonly ApplicationContext _db;
+        IWebHostEnvironment _appEnvironment;
 
-        public CollectionController(ApplicationContext db)
+        public CollectionController(ApplicationContext db, IWebHostEnvironment appEnvironment)
         {
             _db = db;
+            _appEnvironment = appEnvironment;
         }
-        [Authorize]
+
         public IActionResult Index()
         {
             ViewData["Title"] = "Личный кабинет";
@@ -34,7 +39,6 @@ namespace SomeCollections.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public IActionResult Create()
         {
             ViewBag.Themes = _db.Tags.ToList();
@@ -42,7 +46,6 @@ namespace SomeCollections.Controllers
         }
 
         [HttpPost]
-        [Authorize]
         public async Task<IActionResult> Create(CollectionsViewModel model)
         {
             if (ModelState.IsValid)
@@ -52,19 +55,40 @@ namespace SomeCollections.Controllers
                     Name = model.Name,
                     Description = model.Description,
                     Owner = _db.Users.FirstOrDefault(p => p.UserName == User.Identity.Name),
-                    Tag = _db.Tags.FirstOrDefault(p=>p.Id == model.Tag),
+                    Tag = _db.Tags.FirstOrDefault(p => p.Id == model.Tag),
                     CountItems = 0,
                 };
+                item.ImgPath = await UploadImg(model.Img);
+
                 _db.Add(item);
                 await _db.SaveChangesAsync();
+
                 return RedirectToAction("Index");
             }
             ViewBag.Themes = _db.Tags.ToList();
             return View(model);
         }
 
+        private async Task<string> UploadImg (IFormFile uploadedFile)
+        {
+            string path = null;
+            if (uploadedFile != null)
+            {
+                path = "/imgCollections/" + uploadedFile.FileName;
+                using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
+                {
+                    await uploadedFile.CopyToAsync(fileStream);
+                }
+            }
+            else
+            {
+                path = "/imgCollections/default.jpg";
+            }
+
+            return path;
+        }
+
         [HttpGet]
-        [Authorize]
         public IActionResult CurrentCollectuin(Guid id)
         {
             ViewBag.Name = _db.Collections.FirstOrDefault(p => p.Id == id).Name;
@@ -73,7 +97,6 @@ namespace SomeCollections.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public IActionResult Edit(Guid id)
         {
             var collection = _db.Collections.FirstOrDefault(p => p.Id == id);
@@ -89,18 +112,17 @@ namespace SomeCollections.Controllers
         }
 
         [HttpPost]
-        [Authorize]
         public async Task<IActionResult> Edit(Guid id, CollectionsViewModel model)
         {
             var s = _db.Collections.FirstOrDefault(p => p.Id == id);
             s.Name = model.Name;
             s.Description = model.Description;
             s.Tag = _db.Tags.FirstOrDefault(p => p.Id == model.Tag);
+            s.ImgPath = await UploadImg(model.Img);
             await _db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<ActionResult> Delete(Guid id)
         {

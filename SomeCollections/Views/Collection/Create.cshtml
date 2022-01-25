@@ -13,7 +13,7 @@
 
                             <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Новая коллекция</p>
 
-                            <form asp-action="Create">
+                            <form asp-action="Create" method="post" enctype="multipart/form-data">
                                 <div asp-validation-summary="All" class="text-danger"></div>
                                 <div class="form-group">
                                     <label asp-for="Name" class="control-label">Название</label>
@@ -21,13 +21,18 @@
                                 </div>
                                 <div class="form-group">
                                     <label asp-for="Description" class="control-label">Описание</label>
-                                    <textarea style="resize: none" type="text" asp-for="Description" class="form-control" maxlength="120"></textarea>
+                                    <textarea style="resize: none" asp-for="Description" type="text" class="form-control" maxlength="120"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Img">Изображение</label>
+                                    <input asp-for="Img" type="file" class="form-control"/>
                                 </div>
                                 <div class="form-group">
                                     <label asp-for="Tag" class="control-label">Тематика</label>
                                     <select asp-for="Tag" class="form-control">
-                                        @foreach(Tag x in ViewBag.Themes) { 
-                                        <option value="@x.Id">@x.Name</option>
+                                        @foreach (Tag x in ViewBag.Themes)
+                                        {
+                                            <option value="@x.Id">@x.Name</option>
                                         }
                                     </select>
                                 </div>

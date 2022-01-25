@@ -21,7 +21,13 @@
 
                             <div class="card-body">
                                 <h4 class="card-title text-center">@item.Name</h4>
-                                <h6 class="card-subtitle mb-2 text-muted text-center">Автор: @item.Owner.UserName</h6>
+                                @if (item.ImgPath != null)
+                                {
+                                    <div class="border border-success rounded-3">
+                                        <img class="img-fluid" src="@Url.Content(item.ImgPath)" />
+                                    </div>
+                                }
+                                <h6 class="card-subtitle mb-2 mt-2 text-muted text-center">Автор: @item.Owner.UserName</h6>
                                 <p class="card-text">@item.Description</p>
                                 <h5 class="card-subtitle mb-1 text-muted text-right">
                                     <img src="~/pic/LikeButton.webp" height="20" width="20" alt="Like" /> @item.LikeCount

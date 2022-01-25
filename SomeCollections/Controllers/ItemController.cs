@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SomeCollections.Models;
 using SomeCollections.ViewModels;
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,10 +16,12 @@ namespace SomeCollections.Controllers
     public class ItemController : Controller
     {
         private readonly ApplicationContext _db;
+        IWebHostEnvironment _appEnvironment;
 
-        public ItemController(ApplicationContext db)
+        public ItemController(ApplicationContext db, IWebHostEnvironment appEnvironment)
         {
             _db = db;
+            _appEnvironment = appEnvironment;
         }
         [AllowAnonymous]
         public IActionResult Index(Guid Id)
@@ -62,12 +67,33 @@ namespace SomeCollections.Controllers
                     Owner = _db.Users.FirstOrDefault(p => p.UserName == User.Identity.Name),
                     Collection = _db.Collections.FirstOrDefault(p => p.Id == Id),
                 };
+                item.ImgPath = await UploadImg(model.Img);
+
                 _db.Add(item);
                 await _db.SaveChangesAsync();
                 return RedirectToAction("Index", "Item", new { Id });
             }
             return View(model);
-            
+        }
+
+
+        private async Task<string> UploadImg(IFormFile uploadedFile)
+        {
+            string path = null;
+            if (uploadedFile != null)
+            {
+                path = "/imgItems/" + uploadedFile.FileName;
+                using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
+                {
+                    await uploadedFile.CopyToAsync(fileStream);
+                }
+            }
+            else
+            {
+                path = "/imgItems/default.jpg";
+            }
+
+            return path;
         }
 
         [HttpGet]
@@ -93,6 +119,8 @@ namespace SomeCollections.Controllers
             Item s = _db.Items.Include(x=>x.Collection).FirstOrDefault(p => p.Id == id);
             s.Name = model.Name;
             s.Description = model.Description;
+            s.ImgPath = await UploadImg(model.Img);
+
             await _db.SaveChangesAsync();
             return RedirectToAction("Index", "Item", new { s.Collection.Id });
         }

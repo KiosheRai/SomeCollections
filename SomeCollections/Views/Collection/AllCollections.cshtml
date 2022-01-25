@@ -25,7 +25,10 @@
 
                             <div class="card-body">
                                 <h4 class="card-title text-center">@item.Name</h4>
-                                <h6 class="card-subtitle mb-2 text-muted text-center">Автор: @item.Owner.UserName</h6>
+                                <div class="border border-success rounded-3">
+                                    <img class="img-fluid" src="@Url.Content(item.ImgPath)" />
+                                </div>
+                                <h6 class="card-subtitle mb-2 mt-2 text-muted text-center">Автор: @item.Owner.UserName</h6>
                                 <p class="card-text">@item.Description</p>
                                 <h5 class="text-muted">#@item.Tag.Name</h5>
                                 <h6 class="text-muted">Элементов: @item.CountItems</h6>
