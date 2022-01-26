@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using SomeCollections.Models;
 using System;
 using System.Collections.Generic;
@@ -19,23 +20,35 @@ namespace SomeCollections
             _userManager = userManager;
         }
 
-        public async Task Send(string message)
+        public async Task SendComment(string message, string userName)
         {
-            await this.Clients.All.SendAsync("Send", message);
+            await this.Clients.All.SendAsync("Send", message, userName);
         }
 
-        //public async Task Like(Guid itemId, string UserName)
-        //{
-        //    Item item = _db.Items.FirstOrDefault(p=>)
-        //    var checkedExistLike = _db.Likes.Where(p => p.ItemId == itemId && p.UserName == UserName).ToList().Count;
-        //    if (checkedExistLike == 0)
-        //    {
-        //        Like like = new Like { UserName = UserName, ItemId = itemId };
-        //        _db.Likes.Add(like);
-        //        await _db.SaveChangesAsync();
-        //    }
-        //    var likes = _db.Likes.Where(p => p.ItemId == itemId).ToList().Count;
-        //    await this.Clients.Group(itemId).SendAsync("getLike", likes);
-        //}
+        public async Task Like(Guid itemId, string UserName)
+        {
+            var checkedExistLike = _db.Likes
+                .Include(p => p.Item)
+                .Include(s => s.User)
+                .Where(p => p.Item.Id == itemId && p.User.UserName == UserName)
+                .ToList();
+
+            var user = _db.Users.FirstOrDefault(s => s.UserName == UserName);
+            var item = _db.Items.FirstOrDefault(g => g.Id == itemId);
+
+            if (checkedExistLike.Count == 0)
+            {
+                Like like = new Like { User = user, Item = item };
+                item.LikeCount += 1;
+                _db.Likes.Add(like);
+            }
+            else
+            {
+                item.LikeCount -= 1;
+                _db.Likes.Remove(checkedExistLike[0]);
+            }
+            await _db.SaveChangesAsync();
+            await Clients.All.SendAsync("getLike", item.LikeCount);
+        }
     }
 }

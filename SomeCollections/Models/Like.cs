@@ -6,7 +6,7 @@ namespace SomeCollections.Models
     {
         public Guid Id { get; set; }
 
-        public virtual User UserId { get; set; }
-        public virtual Item ItemId { get; set; }
+        public virtual User User { get; set; }
+        public virtual Item Item { get; set; }
     }
 }

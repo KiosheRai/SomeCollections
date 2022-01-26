@@ -9,6 +9,7 @@ namespace SomeCollections.Models
         public DbSet<Collection> Collections { get; set; }
         public DbSet<Like> Likes { get; set; }
         public DbSet<Tag> Tags { get; set; }
+        public DbSet<Message> Messages { get; set; }
 
         public ApplicationContext(DbContextOptions<ApplicationContext> options)
             : base(options)

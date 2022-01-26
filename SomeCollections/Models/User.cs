@@ -8,5 +8,6 @@ namespace SomeCollections.Models
         public virtual ICollection<Collection> ListCollections { get; set; }
         public virtual ICollection<Item> ListItems { get; set; }
         public virtual ICollection<Like> Likes { get; set; }
+        public virtual ICollection<Message> Messages { get; set; }
     }
 }
