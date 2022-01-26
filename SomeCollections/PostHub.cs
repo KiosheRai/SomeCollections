@@ -18,11 +18,6 @@ namespace SomeCollections
             _db = context;
         }
 
-        public async Task SendComment(string message, string userName)
-        {
-            await this.Clients.All.SendAsync("Send", message, userName);
-        }
-
         public async Task Like(Guid itemId, string UserName)
         {
             var checkedExistLike = _db.Likes
@@ -49,22 +44,22 @@ namespace SomeCollections
             await Clients.All.SendAsync("getLike", item.LikeCount);
         }
 
-        //public async Task SendComment(Guid itemId, string userName, string textComment)
-        //{
-        //    User user = _db.Users.FirstOrDefault(x => x.UserName == userName);
-        //    Item item = _db.Items.FirstOrDefault(x => x.Id == itemId);
+        public async Task SendComment(Guid itemId, string userName, string textComment)
+        {
+            User user = _db.Users.FirstOrDefault(x => x.UserName == userName);
+            Item item = _db.Items.FirstOrDefault(x => x.Id == itemId);
 
-        //    Message message = new Message()
-        //    {
-        //        Item = item,
-        //        Sender = user,
-        //        Text = textComment,
-        //        Time = DateTime.Now,
-        //    };
+            Message message = new Message()
+            {
+                Item = item,
+                Sender = user,
+                Text = textComment,
+                Time = DateTime.Now,
+            };
 
-        //    _db.Messages.Add(message);
-        //    await _db.SaveChangesAsync();
-        //    await Clients.All.SendAsync("getComments", message);
-        //}
+            _db.Messages.Add(message);
+            await _db.SaveChangesAsync();
+            await Clients.All.SendAsync("getComment", message.Sender.UserName, message.Text, message.Time);
+        }
     }
 }
