@@ -39,9 +39,7 @@ namespace SomeCollections.Controllers
         public IActionResult CurrentItem(Guid Id)
         {
             var item = _db.Items.Include(s=>s.Collection).Include(o=>o.Owner).FirstOrDefault(p => p.Id == Id);
-            Collection col = _db.Collections.FirstOrDefault(p => p.Id == item.Collection.Id);
-            ViewBag.NameCollection = col.Name;
-            ViewBag.IdCollection = col.Id;
+            ViewBag.Comments = _db.Messages.Include(s=>s.Sender).Where(s => s.Item.Id == item.Id); 
             return View(item);
         }
 

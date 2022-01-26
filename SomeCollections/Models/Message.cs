@@ -9,5 +9,6 @@ namespace SomeCollections.Models
         public DateTime Time { get; set; }
 
         public virtual User Sender { get; set; }
+        public virtual Item Item { get; set; }
     }
 }

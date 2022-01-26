@@ -1,6 +1,6 @@
 ﻿@model SomeCollections.Models.Item
 @{
-    ViewData["Title"] = "Создание айтема";
+    ViewData["Title"] = $"{@Model.Collection.Name}";
 }
 <div class="container vh-100">
     <div class="row d-flex justify-content-center align-items-center h-100">
@@ -18,7 +18,7 @@
                     }
                     <h4 class="card-title text-muted">Автор: @Model.Owner.UserName</h4>
                     <p class="card-text">@Model.Description</p>
-                    <a class="btn btn-outline-primary" asp-route-Id="@ViewBag.IdCollection" asp-action="Index">Назад</a>
+                    <a class="btn btn-outline-primary" asp-route-Id="@Model.Collection.Id" asp-action="Index">Назад</a>
                 </div>
                 <div class="card-footer text-muted bg-primary">
                     <h5 class="card-subtitle mb-1 text-muted text-right">
@@ -34,23 +34,28 @@
 
 
             <div class="form-outline w-100">
-                <textarea class="form-control" maxlength="120" placeholder="Оставить комментаий" id="comment"></textarea>
+                <textarea class="form-control" maxlength="120" placeholder="Оставить комментаий" id="commentText"></textarea>
                 <button type="button" class="m-3 btn btn-outline-info" id="commentBtn">Отправить</button>
             </div>
 
-            <div class="card mb-3">
-                <div class="card-body">
-                    <div class="d-flex flex-start">
-                        <div class="w-100">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h6 class="text-primary fw-bold mb-0">
-                                    lara_stewart <span class="text-dark ms-2">Hmm, This poster looks cool</span>
-                                </h6>
-                                <p class="mb-0">2 days ago</p>
+            <div id="comments">
+                @foreach (Message comment in ViewBag.Comments)
+                {
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="d-flex flex-start">
+                                <div class="w-100">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h6 class="text-primary fw-bold mb-0">
+                                            @comment.Sender.UserName <span class="text-dark ms-2">@comment.Text</span>
+                                        </h6>
+                                        <p class="mb-0">@comment.Time.ToString()</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                }
             </div>
         </div>
     </div>
@@ -62,22 +67,6 @@
         .withUrl("/Post")
         .build();
 
-    hubConnection.on('Send', function (message, userName) {
-
-        // создаем элемент <b> для имени пользователя
-        let userNameElem = document.createElement("b");
-        userNameElem.appendChild(document.createTextNode(userName + ': '));
-
-        // создает элемент <p> для сообщения пользователя
-        let elem = document.createElement("p");
-        elem.appendChild(userNameElem);
-        elem.appendChild(document.createTextNode(message));
-
-        var firstElem = document.getElementById("chatroom").firstChild;
-        document.getElementById("chatroom").insertBefore(elem, firstElem);
-
-    });
-
     hubConnection.on('getLike', function (data) {
         var counts = document.getElementById("countLikes");
         counts.textContent = data;
@@ -85,8 +74,15 @@
 
     document.getElementById("likebtn").addEventListener("click", function (e) {
         let itemId = "@Model.Id";
-        let name="@User.Identity.Name";
-        hubConnection.invoke("Like", itemId, name);
+        let userName="@User.Identity.Name";
+        hubConnection.invoke("Like", itemId, userName);
+    });
+
+    document.getElementById("commentbtn").addEventListener("click", function (e) {
+        let itemId = "@Model.Id";
+        let userName = "@User.Identity.Name";
+        let text = document.getElementById("commentText").value;
+        hubConnection.invoke("SendComment", itemId, name, text);
     });
 
     hubConnection.start();

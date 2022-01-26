@@ -11,13 +11,11 @@ namespace SomeCollections
 {
     public class PostHub : Hub
     {
-        ApplicationContext _db;
-        UserManager<User> _userManager;
+        private readonly ApplicationContext _db;
 
-        public PostHub(ApplicationContext context, UserManager<User> userManager)
+        public PostHub(ApplicationContext context)
         {
             _db = context;
-            _userManager = userManager;
         }
 
         public async Task SendComment(string message, string userName)
@@ -50,5 +48,23 @@ namespace SomeCollections
             await _db.SaveChangesAsync();
             await Clients.All.SendAsync("getLike", item.LikeCount);
         }
+
+        //public async Task SendComment(Guid itemId, string userName, string textComment)
+        //{
+        //    User user = _db.Users.FirstOrDefault(x => x.UserName == userName);
+        //    Item item = _db.Items.FirstOrDefault(x => x.Id == itemId);
+
+        //    Message message = new Message()
+        //    {
+        //        Item = item,
+        //        Sender = user,
+        //        Text = textComment,
+        //        Time = DateTime.Now,
+        //    };
+
+        //    _db.Messages.Add(message);
+        //    await _db.SaveChangesAsync();
+        //    await Clients.All.SendAsync("getComments", message);
+        //}
     }
 }

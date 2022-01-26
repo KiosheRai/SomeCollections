@@ -20,5 +20,6 @@ namespace SomeCollections.Models
         public int LikeCount { get; set; }
 
         public virtual ICollection<Like> Likes { get; set; }
+        public virtual ICollection<Message> Messages { get; set; }
     }
 }
