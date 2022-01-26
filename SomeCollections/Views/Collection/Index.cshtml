@@ -5,17 +5,19 @@
 }
 
 <div>
-    <div>
-        <a class="btn-outline-info" asp-action="Create">Добавить коллецию</a>
-    </div>
-
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div>
+            <a class="btn-outline-info" asp-action="Create">Добавить коллецию</a>
+        </div>
+    }
     <h1>Ваши коллекции:</h1>
 
     <div class="container mt-5">
         <div class="row">
-            @if(Model == null)
+            @if (Model == null)
             {
-            <h1 class="text-center ">У вас нету собственных коллекций.</h1>
+                <h1 class="text-center ">У вас нету собственных коллекций.</h1>
             }
             @foreach (var item in Model)
             {
@@ -27,9 +29,9 @@
                                 <h4 class="card-title text-center">@item.Name</h4>
                                 @if (item.ImgPath != null)
                                 {
-                            <div class="border border-success rounded-3">
-                                <img class="img-fluid" src="@Url.Content(item.ImgPath)" />
-                            </div>
+                                    <div class="border border-success rounded-3">
+                                        <img class="img-fluid" src="@Url.Content(item.ImgPath)" />
+                                    </div>
                                 }
                                 <h6 class="card-subtitle mb-2 mt-2 text-muted text-center">Автор: @item.Owner.UserName</h6>
                                 <p class="card-text">@item.Description</p>

@@ -5,10 +5,12 @@
 }
 
 <div>
-    <div>
-        <a class="btn-outline-info" asp-action="Create">Добавить коллецию</a>
-    </div>
-
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div>
+            <a class="btn-outline-info" asp-action="Create">Добавить коллецию</a>
+        </div>
+    }
     <h1>Все коллекции:</h1>
 
     <div class="container mt-5">

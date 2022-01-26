@@ -26,10 +26,11 @@ namespace SomeCollections.Controllers
         [AllowAnonymous]
         public IActionResult Index(Guid Id)
         {
-            var Collection = _db.Collections.FirstOrDefault(p => p.Id == Id);
+            var Collection = _db.Collections.Include(s=>s.Owner).FirstOrDefault(p => p.Id == Id);
             ViewData["Title"] = Collection.Name.ToString();
             ViewBag.Name = Collection.Name.ToString();
             ViewBag.CollectionId = Id;
+            ViewBag.Owner = Collection.Owner.UserName;
             var Items = _db.Items.Include(x=>x.Owner).Where(p => p.Collection.Id == Id);
             return View(Items);
         }

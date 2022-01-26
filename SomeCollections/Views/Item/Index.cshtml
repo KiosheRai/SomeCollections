@@ -5,10 +5,15 @@
 }
 
 <div>
-    <div>
-        <a class="btn-outline-info" asp-action="Create" asp-route-Id="@ViewBag.CollectionId">Добавить айтем</a>
-    </div>
-
+    @if (User.Identity.IsAuthenticated)
+    {
+        @if (User.IsInRole("admin") || User.Identity.Name.Equals(ViewBag.Owner))
+        { 
+            <div>
+                <a class="btn-outline-info" asp-action="Create" asp-route-Id="@ViewBag.CollectionId">Добавить айтем</a>
+            </div>
+        }
+    }
     <h1>Коллекция: @ViewBag.Name</h1>
 
     <div class="container mt-5">
@@ -46,7 +51,7 @@
                         </form>
                     </div>
                 </div>
-                }
-            </div>
+            }
         </div>
     </div>
+</div>
