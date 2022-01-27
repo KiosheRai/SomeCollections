@@ -59,7 +59,7 @@ namespace SomeCollections
 
             _db.Messages.Add(message);
             await _db.SaveChangesAsync();
-            await Clients.All.SendAsync("getComment", message.Sender.UserName, message.Text, message.Time);
+            await Clients.All.SendAsync("getComment", message.Sender.UserName, message.Text, message.Time.ToString());
         }
     }
 }

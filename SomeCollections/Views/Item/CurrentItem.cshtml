@@ -23,7 +23,7 @@
                     </div>
                     <div class="card-footer text-muted bg-primary">
                         <h5 class="card-subtitle mb-1 text-muted text-right">
-                            <button id="likebtn" class="btn btn-outline-info">
+                            <button id="likebtn" class="btn btn-primary-info">
                                 <img src="~/pic/LikeButton.webp" height="20" width="20" alt="Like" />
                             </button>
                             <span id="countLikes" class="text-white" style="font-size: 1.2em">@Model.LikeCount</span>
@@ -33,11 +33,13 @@
 
                 <h5 class="text-center border-bottom m-3">Комментарии</h5>
 
-
-                <div class="form-outline w-100">
-                    <textarea class="form-control" maxlength="120" placeholder="Оставить комментаий" id="commentText"></textarea>
-                    <button type="button" class="m-3 btn btn-outline-info" id="commentBtn">Отправить</button>
-                </div>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <div class="form-outline w-100">
+                        <textarea class="form-control" style="resize: none" maxlength="120" placeholder="Оставить комментаий" id="commentText"></textarea>
+                        <button type="button" class="m-3 btn btn-outline-info" id="commentBtn">Отправить</button>
+                    </div>
+                }
 
                 <div id="comments">
                     @foreach (Message comment in ViewBag.Comments)
@@ -48,7 +50,7 @@
                                     <div class="w-100">
                                         <div class="d-flex justify-content-between align-items-center mb-3">
                                             <h6 class="text-primary fw-bold mb-0">
-                                                @comment.Sender.UserName <span class="text-dark ms-2">@comment.Text</span>
+                                                @comment.Sender.UserName<span class="text-dark ms-2 ml-2">@comment.Text</span>
                                             </h6>
                                             <p class="mb-0">@comment.Time.ToString()</p>
                                         </div>
@@ -75,29 +77,35 @@
     });
 
     hubConnection.on('getComment', function (name, text, time) {
-        var comment = document.getElementById('comments');
-        
-        var user = name;
-        var messenge = text;
-        var time = time;
-        var div = document.createElement("div")
-        div = setAttribute("class", "ard mb-3")
+        let comment = document.getElementById('comments')
+
+        let div = document.createElement("div")
+        div.setAttribute("class", "card mb-3")
+        let div1 = document.createElement("div")
+        div1.setAttribute("class", "card-body")
+        let div2 = document.createElement("div")
+        div2.setAttribute("class", "d-flex flex-start")
+        let div3 = document.createElement("div")
+        div3.setAttribute("class", "w-100")
+        let div4 = document.createElement("div")
+        div4.setAttribute("class", "d-flex justify-content-between align-items-center mb-3")
+        let h = document.createElement("h6")
+        h.setAttribute("class", "text-primary fw-bold mb-0")
+        let span = document.createElement("span")
+        span.setAttribute("class", "text-dark ms-2 ml-2")
+        let p = document.createElement("p")
+        p.setAttribute("class", "mb-0")
+        p.innerText = time
+        span.innerHTML = text
+        h.innerHTML = name
+        h.appendChild(span)
+        div4.appendChild(h)
+        div4.appendChild(p)
+        div3.appendChild(div4)
+        div2.appendChild(div3)
+        div1.appendChild(div2)
+        div.appendChild(div1)
         comment.appendChild(div)
-        var div1 = document.createElement("div")
-        div1 = setAttribute("class", "card-body")
-        var div2 = document.createElement("div")
-        div2 = setAttribute("class", "d-flex flex-start")
-        var div3 = document.createElement("div")
-        div3 = setAttribute("class", "w-100")
-        var div4 = document.createElement("div")
-        div4 = setAttribute("class", "d-flex justify-content-between align-items-center mb-3")
-        var h = document.createElement("h6")
-        h = setAttribute("class", "text-primary fw-bold mb-0")
-        var span = document.createElement("span")
-        span = setAttribute("class", "text-primary fw-bold mb-0")
-        var p = document.createElement("p")
-        p = setAttribute("class", "mb-0")
-               
     });
 
     document.getElementById("likebtn").addEventListener("click", function (e) {
