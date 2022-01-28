@@ -13,6 +13,16 @@
     }
     <h1>Ваши коллекции:</h1>
 
+    <div>
+        <h6 class="font-weight-bold d-inline">Сортировка: </h6>
+        <a class="btn-link m-2" asp-action="Index" asp-route-sortOrder="@ViewBag.NameSort">
+            Имя
+        </a>
+        <a class="btn-link m-2" asp-action="Index" asp-route-sortOrder="@ViewBag.CountSort">
+            Кол-во элементов
+        </a>
+    </div>
+
     <div class="container mt-5">
         <div class="row">
             @if (Model == null)

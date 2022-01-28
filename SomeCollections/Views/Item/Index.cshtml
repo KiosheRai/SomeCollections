@@ -7,14 +7,24 @@
 <div>
     @if (User.Identity.IsAuthenticated)
     {
-        @if (User.IsInRole("admin") || User.Identity.Name.Equals(ViewBag.Owner))
-        { 
+        @if (User.IsInRole("admin") || User.Identity.Name.Equals(@ViewBag.Collection.Owner.UserName))
+        {
             <div>
-                <a class="btn-outline-info" asp-action="Create" asp-route-Id="@ViewBag.CollectionId">Добавить айтем</a>
+                <a class="btn-outline-info" asp-action="Create" asp-route-Id="@ViewBag.Collection.Id">Добавить айтем</a>
             </div>
         }
     }
-    <h1>Коллекция: @ViewBag.Name</h1>
+    <h1>Коллекция: @ViewBag.Collection.Name</h1>
+
+    <div>
+        <h6 class="font-weight-bold d-inline">Сортировка: </h6>
+        <a class="btn-link m-2" asp-action="Index" asp-route-Id="@ViewBag.Collection.Id" asp-route-sortOrder="@ViewBag.NameSort">
+            Имя
+        </a>
+        <a class="btn-link m-2" asp-action="Index" asp-route-Id="@ViewBag.Collection.Id" asp-route-sortOrder="@ViewBag.LikeSort">
+            Кол-во лайков
+        </a>
+    </div>
 
     <div class="container mt-5">
         <div class="row">

@@ -24,18 +24,43 @@ namespace SomeCollections.Controllers
             _appEnvironment = appEnvironment;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(SortState sortOrder = SortState.NameAsc)
         {
-            ViewData["Title"] = "Личный кабинет";
-            var Items = _db.Collections.Include(x=>x.Tag).Include(s=>s.Owner).Where(p => p.Owner.UserName == User.Identity.Name);
-            return View(Items);
+            IQueryable<Collection> collections = _db.Collections.Include(x => x.Tag).Include(s => s.Owner).Where(p => p.Owner.UserName == User.Identity.Name);
+
+            ViewData["NameSort"] = sortOrder == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
+            ViewData["CountSort"] = sortOrder == SortState.CountAsc ? SortState.CoountDesc : SortState.CountAsc;
+
+            collections = sortOrder switch
+            {
+                SortState.NameDesc => collections.OrderByDescending(s => s.Name),
+                SortState.CountAsc => collections.OrderBy(s => s.CountItems),
+                SortState.CoountDesc => collections.OrderByDescending(s => s.CountItems),
+                _ => collections.OrderBy(s => s.Name),
+            };
+            
+            return View(collections);
         }
 
         [AllowAnonymous]
-        public IActionResult AllCollections()
+        public IActionResult AllCollections(SortState sortOrder = SortState.NameAsc)
         {
-            var item = _db.Collections.Include(p=>p.Owner).Include(x=>x.Tag).ToList();
-            return View(item);
+            IQueryable<Collection> collections = _db.Collections.Include(p => p.Owner).Include(x => x.Tag);
+
+            ViewData["NameSort"] = sortOrder == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
+            ViewData["CountSort"] = sortOrder == SortState.CountAsc ? SortState.CoountDesc : SortState.CountAsc;
+            ViewData["OwnerSort"] = sortOrder == SortState.OwnerAsc ? SortState.OwnerDesc : SortState.OwnerAsc;
+
+            collections = sortOrder switch
+            {
+                SortState.NameDesc => collections.OrderByDescending(s => s.Name),
+                SortState.CountAsc => collections.OrderBy(s => s.CountItems),
+                SortState.CoountDesc => collections.OrderByDescending(s => s.CountItems),
+                SortState.OwnerAsc => collections.OrderBy(s => s.Owner.UserName),
+                SortState.OwnerDesc => collections.OrderByDescending(s => s.Owner.UserName),
+                _ => collections.OrderBy(s => s.Name),
+            };
+            return View(collections);
         }
 
         [HttpGet]

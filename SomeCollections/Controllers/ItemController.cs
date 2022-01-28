@@ -24,15 +24,23 @@ namespace SomeCollections.Controllers
             _appEnvironment = appEnvironment;
         }
         [AllowAnonymous]
-        public IActionResult Index(Guid Id)
+        public IActionResult Index(Guid Id, SortState sortOrder = SortState.NameAsc)
         {
-            var Collection = _db.Collections.Include(s=>s.Owner).FirstOrDefault(p => p.Id == Id);
-            ViewData["Title"] = Collection.Name.ToString();
-            ViewBag.Name = Collection.Name.ToString();
-            ViewBag.CollectionId = Id;
-            ViewBag.Owner = Collection.Owner.UserName;
-            var Items = _db.Items.Include(x=>x.Owner).Where(p => p.Collection.Id == Id);
-            return View(Items);
+            ViewBag.Collection = _db.Collections.Include(s => s.Owner).FirstOrDefault(p => p.Id == Id);
+            IQueryable<Item> items = _db.Items.Include(x => x.Owner).Where(p => p.Collection.Id == Id);
+
+            ViewData["NameSort"] = sortOrder == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
+            ViewData["LikeSort"] = sortOrder == SortState.CountAsc ? SortState.CoountDesc : SortState.CountAsc;
+
+            items = sortOrder switch
+            {
+                SortState.NameDesc => items.OrderByDescending(s => s.Name),
+                SortState.CountAsc => items.OrderBy(s => s.LikeCount),
+                SortState.CoountDesc => items.OrderByDescending(s => s.LikeCount),
+                _ => items.OrderBy(s => s.Name),
+            };
+
+            return View(items);
         }
 
         [AllowAnonymous]
