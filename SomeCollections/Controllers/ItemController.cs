@@ -137,7 +137,7 @@ namespace SomeCollections.Controllers
         public async Task<ActionResult> Delete(Guid id)
         {
             
-            Item item = _db.Items.Include(x=>x.Collection).FirstOrDefault(p => p.Id == id);
+            Item item = _db.Items.Include(x=>x.Collection).Include(x=>x.Likes).Include(x=>x.Messages).FirstOrDefault(p => p.Id == id);
             Collection col = _db.Collections.FirstOrDefault(p=>p.Id == item.Collection.Id);
             
             if (item != null && col != null)

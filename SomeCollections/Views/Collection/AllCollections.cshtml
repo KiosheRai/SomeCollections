@@ -1,4 +1,4 @@
-﻿@model IEnumerable<SomeCollections.Models.Collection>
+﻿@model SomeCollections.ViewModels.FilterCollectionsViewModel
 
 @{
     ViewData["Title"] = "Коллекции";
@@ -26,13 +26,25 @@
         </a>
     </div>
 
+    <form method="get">
+        <div class="form-inline form-group">
+            <label class="control-label">Имя: </label>
+            <input name="name" class="form-control m-2" />
+
+            <label class="control-label">Тема: </label>
+            <select name="tag" asp-items="Model.Tags" class="form-control m-2"></select>
+
+            <input type="submit" value="Поиск" class="btn btn-primary" />
+        </div>
+    </form>
+
     <div class="container mt-5">
         <div class="row">
             @if (Model == null)
             {
                 <h1 class="text-center ">Список коллекций пуст.</h1>
             }
-            @foreach (var item in Model)
+            @foreach (var item in Model.Collections)
             {
                 <div class="col-md-4">
                     <div class="card mb-4">

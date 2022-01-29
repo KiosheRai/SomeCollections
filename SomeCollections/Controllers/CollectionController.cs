@@ -2,10 +2,12 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SomeCollections.Models;
 using SomeCollections.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -43,9 +45,22 @@ namespace SomeCollections.Controllers
         }
 
         [AllowAnonymous]
-        public IActionResult AllCollections(SortState sortOrder = SortState.NameAsc)
+        public IActionResult AllCollections(int? tag, string name,SortState sortOrder = SortState.NameAsc)
         {
-            IQueryable<Collection> collections = _db.Collections.Include(p => p.Owner).Include(x => x.Tag);
+            IQueryable<Collection> collections = _db.Collections.Include(p => p.Owner).Include(t=>t.Tag).Include(x => x.Tag);
+
+            if( tag != null && tag != 0)
+            {
+                collections = collections.Where(p => p.Tag.Id == tag);
+            }
+            if (!String.IsNullOrEmpty(name))
+            {
+                collections = collections.Where(p => p.Name.Contains(name));
+            }
+
+            List<Tag> tags = _db.Tags.ToList();
+
+            tags.Insert(0, new Tag { Id = 0, Name = "Все" });
 
             ViewData["NameSort"] = sortOrder == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
             ViewData["CountSort"] = sortOrder == SortState.CountAsc ? SortState.CoountDesc : SortState.CountAsc;
@@ -60,7 +75,15 @@ namespace SomeCollections.Controllers
                 SortState.OwnerDesc => collections.OrderByDescending(s => s.Owner.UserName),
                 _ => collections.OrderBy(s => s.Name),
             };
-            return View(collections);
+
+            FilterCollectionsViewModel viewModel = new FilterCollectionsViewModel
+            {
+                Collections = collections.ToList(),
+                Tags = new SelectList(tags, "Id", "Name"),
+                Name = name,
+            };
+
+            return View(viewModel);
         }
 
         [HttpGet]
@@ -152,16 +175,19 @@ namespace SomeCollections.Controllers
         public async Task<ActionResult> Delete(Guid id)
         {
             Collection col = _db.Collections.FirstOrDefault(p => p.Id == id);
-            var items = _db.Items.Where(p => p.Collection.Id == id).ToList();
+            var items = _db.Items.Include(x=>x.Likes).Include(x=>x.Messages).Where(p => p.Collection.Id == id).ToList();
             if (col == null)
             {
                 return NotFound();
             }
-            _db.Collections.Remove(col);
+
             foreach(var x in items)
             {
                 _db.Items.Remove(x);
             }
+
+            _db.Collections.Remove(col);
+
             await _db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
