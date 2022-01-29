@@ -55,7 +55,7 @@ namespace SomeCollections.Controllers
             }
             if (!String.IsNullOrEmpty(name))
             {
-                collections = collections.Where(p => p.Name.Contains(name));
+                collections = collections.Where(p => p.Name.Contains(name) || p.Description.Contains(name));
             }
 
             List<Tag> tags = _db.Tags.ToList();
