@@ -1,40 +1,40 @@
 ﻿@model SomeCollections.ViewModels.FilterCollectionsViewModel
 
 @{
-    ViewData["Title"] = "Коллекции";
+    ViewData["Title"] = Localizer["Header"];
 }
 
 <div>
     @if (User.Identity.IsAuthenticated)
     {
         <div>
-            <a class="btn-outline-info" asp-action="Create">Добавить коллецию</a>
+            <a class="btn-outline-info" asp-action="Create">@Localizer["AddColLink"]</a>
         </div>
     }
-    <h1>Все коллекции:</h1>
+    <h1>@Localizer["Header"]:</h1>
 
     <div>
-        <h6 class="font-weight-bold d-inline">Сортировка: </h6>
+        <h6 class="font-weight-bold d-inline">@Localizer["Sort"]: </h6>
         <a class="btn-link m-2" asp-action="AllCollections" asp-route-sortOrder="@ViewBag.NameSort">
-            Имя
+            @Localizer["SortName"]
         </a>
         <a class="btn-link m-2" asp-action="AllCollections" asp-route-sortOrder="@ViewBag.CountSort">
-            Кол-во элементов
+            @Localizer["SortCount"]
         </a>
         <a class="btn-link m-2" asp-action="AllCollections" asp-route-sortOrder="@ViewBag.OwnerSort">
-            Имя автора
+            @Localizer["SortNameOwner"]
         </a>
     </div>
 
     <form method="get">
         <div class="form-inline form-group">
-            <label class="control-label">Имя: </label>
+            <label class="control-label"> @Localizer["Name"]: </label>
             <input name="name" class="form-control m-2" />
 
-            <label class="control-label">Тема: </label>
+            <label class="control-label">@Localizer["Theme"]: </label>
             <select name="tag" asp-items="Model.Tags" class="form-control m-2"></select>
 
-            <input type="submit" value="Поиск" class="btn btn-primary" />
+            <input type="submit" value="@Localizer["btnSearch"]" class="btn btn-primary" />
         </div>
     </form>
 
@@ -42,7 +42,7 @@
         <div class="row">
             @if (Model == null)
             {
-                <h1 class="text-center ">Список коллекций пуст.</h1>
+            <h1 class="text-center ">@Localizer["ErrorCol"].</h1>
             }
             @foreach (var item in Model.Collections)
             {
@@ -55,18 +55,18 @@
                                 <div class="border border-success rounded-3">
                                     <img class="img-fluid" src="@Url.Content(item.ImgPath)" />
                                 </div>
-                                <h6 class="card-subtitle mb-2 mt-2 text-muted text-center">Автор: @item.Owner.UserName</h6>
+                                <h6 class="card-subtitle mb-2 mt-2 text-muted text-center">@Localizer["Author"]: @item.Owner.UserName</h6>
                                 <p class="card-text">@item.Description</p>
                                 <h5 class="text-muted">#@item.Tag.Name</h5>
-                                <h6 class="text-muted">Элементов: @item.CountItems</h6>
-                                <a class="btn btn-sm btn-primary text-white" asp-controller="Item" asp-action="Index" asp-route-id="@item.Id">Посмотреть</a>
+                                <h6 class="text-muted">@Localizer["Count"]: @item.CountItems</h6>
+                                <a class="btn btn-sm btn-primary text-white" asp-controller="Item" asp-action="Index" asp-route-id="@item.Id">@Localizer["btnShow"]</a>
                                 @if (User.Identity.IsAuthenticated)
                                 {
                                     @if (User.IsInRole("admin") || User.Identity.Name.Equals(item.Owner.UserName))
                                     {
-                                        <a class="btn btn-sm btn-primary text-white" asp-action="Edit" asp-route-id="@item.Id">Редактировать</a>
+                                        <a class="btn btn-sm btn-primary text-white" asp-action="Edit" asp-route-id="@item.Id">@Localizer["btnEdit"]</a>
                                         <button type="submit" class="btn btn-sm btn-danger">
-                                            Удалить
+                                            @Localizer["btnDelete"]
                                         </button>
                                     }
                                 }

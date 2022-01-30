@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SomeCollections.ViewModels;
 using SomeCollections.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Localization;
 
 namespace CustomIdentityApp.Controllers
 {
@@ -10,11 +11,13 @@ namespace CustomIdentityApp.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly IStringLocalizer<AccountController> _localizer;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<IdentityRole> roleManager)
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<IdentityRole> roleManager, IStringLocalizer<AccountController> localizer)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _localizer = localizer;
         }
         [HttpGet]
         public IActionResult Register()

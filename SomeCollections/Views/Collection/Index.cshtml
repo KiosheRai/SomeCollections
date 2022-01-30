@@ -1,25 +1,25 @@
 ﻿@model IEnumerable<SomeCollections.Models.Collection>
 
 @{
-    ViewData["Title"] = "Личные коллекции";
+    ViewData["Title"] = Localizer["Header"];
 }
 
 <div>
     @if (User.Identity.IsAuthenticated)
     {
         <div>
-            <a class="btn-outline-info" asp-action="Create">Добавить коллецию</a>
+            <a class="btn-outline-info" asp-action="Create">@Localizer["AddColLink"]</a>
         </div>
     }
-    <h1>Ваши коллекции:</h1>
+    <h1>@Localizer["Header"]:</h1>
 
     <div>
-        <h6 class="font-weight-bold d-inline">Сортировка: </h6>
+        <h6 class="font-weight-bold d-inline">@Localizer["Sort"]: </h6>
         <a class="btn-link m-2" asp-action="Index" asp-route-sortOrder="@ViewBag.NameSort">
-            Имя
+            @Localizer["SortName"]
         </a>
         <a class="btn-link m-2" asp-action="Index" asp-route-sortOrder="@ViewBag.CountSort">
-            Кол-во элементов
+            @Localizer["SortCount"]
         </a>
     </div>
 
@@ -27,7 +27,7 @@
         <div class="row">
             @if (Model == null)
             {
-                <h1 class="text-center ">У вас нету собственных коллекций.</h1>
+            <h1 class="text-center ">@Localizer["ErrorCol"].</h1>
             }
             @foreach (var item in Model)
             {
@@ -43,14 +43,14 @@
                                         <img class="img-fluid" src="@Url.Content(item.ImgPath)" />
                                     </div>
                                 }
-                                <h6 class="card-subtitle mb-2 mt-2 text-muted text-center">Автор: @item.Owner.UserName</h6>
+                            <h6 class="card-subtitle mb-2 mt-2 text-muted text-center">@Localizer["Author"]: @item.Owner.UserName</h6>
                                 <p class="card-text">@item.Description</p>
                                 <h5 class="text-muted">#@item.Tag.Name</h5>
-                                <h6 class="text-muted">Элементов: @item.CountItems</h6>
-                                <a class="btn btn-sm btn-primary text-white" asp-controller="Item" asp-action="Index" asp-route-id="@item.Id">Посмотреть</a>
-                                <a class="btn btn-sm btn-primary text-white" asp-action="Edit" asp-route-id="@item.Id">Редактировать</a>
+                                <h6 class="text-muted">@Localizer["Count"]: @item.CountItems</h6>
+                                <a class="btn btn-sm btn-primary text-white" asp-controller="Item" asp-action="Index" asp-route-id="@item.Id">@Localizer["btnShow"]</a>
+                                <a class="btn btn-sm btn-primary text-white" asp-action="Edit" asp-route-id="@item.Id">@Localizer["btnEdit"]</a>
                                 <button type="submit" class="btn btn-sm btn-danger">
-                                    Удалить
+                                    @Localizer["btnDelete"]
                                 </button>
                             </div>
                         </form>

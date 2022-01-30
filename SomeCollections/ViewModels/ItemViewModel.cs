@@ -6,10 +6,10 @@ namespace SomeCollections.ViewModels
 {
     public class ItemViewModel
     {
-        [Required(ErrorMessage = "Пустое поле!")]
+        [Required(ErrorMessage = "Emptyfield")]
         [Display(Name = "Name")]
         public string Name { get; set; }
-        [Required(ErrorMessage = "Пустое поле!")]
+        [Required(ErrorMessage = "Emptyfield")]
         [Display(Name = "Description")]
         public string Description { get; set; }
 

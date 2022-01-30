@@ -17,9 +17,9 @@
                                 <img class="img-fluid" style='max-height: 320px' src="@Url.Content(Model.ImgPath)" />
                             </div>
                         }
-                        <h4 class="card-title text-muted">Автор: @Model.Owner.UserName</h4>
+                        <h4 class="card-title text-muted">@Localizer["Author"]: @Model.Owner.UserName</h4>
                         <p class="card-text">@Model.Description</p>
-                        <a class="btn btn-outline-primary" asp-route-Id="@Model.Collection.Id" asp-action="Index">Назад</a>
+                        <a class="btn btn-outline-primary" asp-route-Id="@Model.Collection.Id" asp-action="Index">@Localizer["btnBack"]</a>
                     </div>
                     <div class="card-footer text-muted bg-primary">
                         <h5 class="card-subtitle mb-1 text-muted text-right">
@@ -31,13 +31,13 @@
                     </div>
                 </div>
 
-                <h5 class="text-center border-bottom m-3">Комментарии</h5>
+                <h5 class="text-center border-bottom m-3">@Localizer["Comments"]</h5>
 
                 @if (User.Identity.IsAuthenticated)
                 {
                     <div class="form-outline w-100">
-                        <textarea class="form-control" style="resize: none" maxlength="120" placeholder="Оставить комментаий" id="commentText"></textarea>
-                        <button type="button" class="m-3 btn btn-outline-info" id="commentBtn">Отправить</button>
+                        <textarea class="form-control" style="resize: none" maxlength="120" placeholder="@Localizer["PlaceHolderComm"]" id="commentText"></textarea>
+                        <button type="button" class="m-3 btn btn-outline-info" id="commentBtn">@Localizer["Send"]</button>
                     </div>
                 }
 

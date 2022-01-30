@@ -1,6 +1,6 @@
 ﻿@model SomeCollections.ViewModels.CollectionsViewModel
 @{
-    ViewData["Title"] = "Создание коллекции";
+    ViewData["Title"] = Localizer["Header"];
 }
 
 <div class="container vh-100">
@@ -11,24 +11,26 @@
                     <div class="row justify-content-center">
                         <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
 
-                            <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Новая коллекция</p>
+                            <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">@Localizer["Header"]</p>
 
                             <form asp-action="Create" method="post" enctype="multipart/form-data">
-                                <div asp-validation-summary="All" class="text-danger"></div>
                                 <div class="form-group">
-                                    <label asp-for="Name" class="control-label">Название</label>
+                                    <label asp-for="Name" class="control-label">@Localizer["Name"]</label>
                                     <input type="text" asp-for="Name" class="form-control" />
+                                    <span asp-validation-for="Name" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="Description" class="control-label">Описание</label>
+                                    <label asp-for="Description" class="control-label">@Localizer["Desc"]</label>
                                     <textarea style="resize: none" asp-for="Description" type="text" class="form-control" maxlength="120"></textarea>
+                                    <span asp-validation-for="Description" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="Img">Изображение</label>
-                                    <input asp-for="Img" type="file" class="form-control"/>
+                                    <label asp-for="Img">@Localizer["Image"]</label>
+                                    <input asp-for="Img" type="file" class="form-control" />
+                                    <span asp-validation-for="Img" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="Tag" class="control-label">Тематика</label>
+                                    <label asp-for="Tag" class="control-label">@Localizer["Tag"]</label>
                                     <select asp-for="Tag" class="form-control">
                                         @foreach (Tag x in ViewBag.Themes)
                                         {
@@ -37,8 +39,8 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <input type="submit" value="Добавить" class="btn btn-outline-secondary" />
-                                    <a class="btn btn-outline-secondary" asp-action="AllCollections">Отмена</a>
+                                    <input type="submit" value="@Localizer["btnSave"]" class="btn btn-outline-secondary" />
+                                    <a class="btn btn-outline-secondary" asp-action="AllCollections">@Localizer["btnBack"]</a>
                                 </div>
                             </form>
                         </div>

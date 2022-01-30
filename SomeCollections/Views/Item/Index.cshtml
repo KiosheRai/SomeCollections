@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<SomeCollections.Models.Item>
 
 @{
-    ViewData["Title"] = "Личные коллекции";
+    ViewData["Title"] = Localizer["Header"];
 }
 
 <div>
@@ -10,19 +10,19 @@
         @if (User.IsInRole("admin") || User.Identity.Name.Equals(@ViewBag.Collection.Owner.UserName))
         {
             <div>
-                <a class="btn-outline-info" asp-action="Create" asp-route-Id="@ViewBag.Collection.Id">Добавить айтем</a>
+                <a class="btn-outline-info" asp-action="Create" asp-route-Id="@ViewBag.Collection.Id">@Localizer["AddItem"]</a>
             </div>
         }
     }
-    <h1>Коллекция: @ViewBag.Collection.Name</h1>
+    <h1>@Localizer["Header"]: @ViewBag.Collection.Name</h1>
 
     <div>
-        <h6 class="font-weight-bold d-inline">Сортировка: </h6>
+        <h6 class="font-weight-bold d-inline">@Localizer["Sort"]: </h6>
         <a class="btn-link m-2" asp-action="Index" asp-route-Id="@ViewBag.Collection.Id" asp-route-sortOrder="@ViewBag.NameSort">
-            Имя
+            @Localizer["SortName"]
         </a>
         <a class="btn-link m-2" asp-action="Index" asp-route-Id="@ViewBag.Collection.Id" asp-route-sortOrder="@ViewBag.LikeSort">
-            Кол-во лайков
+            @Localizer["SortLikes"]
         </a>
     </div>
 
@@ -42,19 +42,19 @@
                                         <img class="img-fluid" src="@Url.Content(item.ImgPath)" />
                                     </div>
                                 }
-                                <h6 class="card-subtitle mb-2 mt-2 text-muted text-center">Автор: @item.Owner.UserName</h6>
+                                <h6 class="card-subtitle mb-2 mt-2 text-muted text-center">@Localizer["Author"]: @item.Owner.UserName</h6>
                                 <p class="card-text">@item.Description</p>
                                 <h5 class="card-subtitle mb-1 text-muted text-right">
                                     <img src="~/pic/LikeButton.webp" height="20" width="20" alt="Like" /> @item.LikeCount
                                 </h5>
-                                <a class="btn btn-sm btn-primary text-white" asp-action="CurrentItem" asp-route-Id="@item.Id">Посмотреть</a>
+                                <a class="btn btn-sm btn-primary text-white" asp-action="CurrentItem" asp-route-Id="@item.Id">@Localizer["btnShow"]</a>
                                 @if (User.Identity.IsAuthenticated)
                                 {
                                     @if (User.IsInRole("admin") || User.Identity.Name.Equals(item.Owner.UserName))
-                                    {<a class="btn btn-sm btn-primary text-white" asp-action="Edit" asp-route-Id="@item.Id">Редактировать</a>
-                                        <button type="submit" class="btn btn-sm btn-danger">
-                                            Удалить
-                                        </button>
+                                    {<a class="btn btn-sm btn-primary text-white" asp-action="Edit" asp-route-Id="@item.Id">@Localizer["btnEdit"]</a>
+                                     <button type="submit" class="btn btn-sm btn-danger">
+                                         @Localizer["btnDelete"]
+                                     </button>
                                     }
                                 }
                             </div>

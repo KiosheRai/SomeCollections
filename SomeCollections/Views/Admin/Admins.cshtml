@@ -1,14 +1,14 @@
 ﻿@model IEnumerable<SomeCollections.Models.User>
 @{
-    ViewBag.Title = "Список админов";
+    ViewBag.Title = Localizer["Header"];
 }
 
-<a asp-action="Index" class="btn-outline-info">Перейти к пользователям</a>
+<a asp-action="Index" class="btn-outline-info">@Localizer["UserLink"]</a>
 
-<h2 class="text-center">Список администраторов</h2>
+<h2 class="text-center">@Localizer["Header"]</h2>
 
 <table class="table">
-    <tr><th>Email</th><th>Логин</th><th></th></tr>
+    <tr><th>@Localizer["ColEmail"]</th><th>@Localizer["ColLogin"]</th><th></th></tr>
     @foreach (var user in Model)
     {
         <tr>
@@ -26,16 +26,16 @@
                 <form asp-action="Delete" asp-route-id="@user.Id" method="post">
                     @if (user.LockoutEnd == null)
                     {
-                        <a class="btn btn-sm btn-primary" asp-action="Blocking" asp-route-id="@user.Id">Блокировать</a>
+                    <a class="btn btn-sm btn-primary" asp-action="Blocking" asp-route-id="@user.Id">@Localizer["btnBlock"]</a>
                     }
                     else
                     {
-                        <a class="btn btn-sm btn-primary" asp-action="Blocking" asp-route-id="@user.Id">Разборкировать</a>
+                <a class="btn btn-sm btn-primary" asp-action="Blocking" asp-route-id="@user.Id">@Localizer["btnUnBlock"]</a>
                     }
-                    <a class="btn btn-sm btn-primary" asp-action="ChangeRoleToUser" asp-route-id="@user.Id">Убрать админку</a>
-                    <button type="submit" class="btn btn-sm btn-danger">
-                        Удалить
-                    </button>
+                <a class="btn btn-sm btn-primary" asp-action="ChangeRoleToUser" asp-route-id="@user.Id">@Localizer["btnSetUser"]</a>
+                <button type="submit" class="btn btn-sm btn-danger">
+                    @Localizer["btnDelete"]
+                </button>
                 </form>
             </td>
         </tr>
