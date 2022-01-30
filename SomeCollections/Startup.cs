@@ -40,7 +40,20 @@ namespace SomeCollections
             services.AddSignalR();
             services.AddControllersWithViews()
                 .AddDataAnnotationsLocalization()
-                .AddViewLocalization(); ;
+                .AddViewLocalization();
+
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                var supportedCultures = new[]
+                {
+                    new CultureInfo("en"),
+                    new CultureInfo("ru")
+                };
+
+                options.DefaultRequestCulture = new RequestCulture("ru");
+                options.SupportedCultures = supportedCultures;
+                options.SupportedUICultures = supportedCultures;
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -55,19 +68,8 @@ namespace SomeCollections
                 app.UseHsts();
             }
 
-            var supportedCultures = new[]
-            {
-                new CultureInfo("en"),
-                new CultureInfo("ru")
-            };
-            app.UseRequestLocalization(new RequestLocalizationOptions
-            {
-                DefaultRequestCulture = new RequestCulture("ru"),
-                SupportedCultures = supportedCultures,
-                SupportedUICultures = supportedCultures
-            });
-
             app.UseHttpsRedirection();
+            app.UseRequestLocalization();
             app.UseStaticFiles();
 
             app.UseRouting();
