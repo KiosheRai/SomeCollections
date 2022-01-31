@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Identity;
 using SomeCollections.Models;
 using Microsoft.AspNetCore.Authorization;
 using System;
+using System.Linq;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
 namespace CustomIdentityApp.Controllers
 {
@@ -38,10 +41,23 @@ namespace CustomIdentityApp.Controllers
         public async Task<ActionResult> Delete(string id)
         {
             User user = await _userManager.FindByIdAsync(id);
+            List<Collection> collection = _db.Collections.Include(x=>x.Items).Where(x=>x.Owner.Id == user.Id).ToList();
+
             if (user != null)
             {
-                IdentityResult result = await _userManager.DeleteAsync(user);
+                foreach(var col in collection)
+                {
+                    var items = _db.Items.Include(x => x.Likes).Include(x => x.Messages).Where(p => p.Collection.Id == col.Id).ToList();
+                    foreach(var item in items)
+                    {
+                        _db.Items.Remove(item);
+                    }
+                    _db.Collections.Remove(col);
+                }
             }
+            await _db.SaveChangesAsync();
+            IdentityResult result = await _userManager.DeleteAsync(user);
+            
             return RedirectToAction("Index");
         }
         [Authorize]

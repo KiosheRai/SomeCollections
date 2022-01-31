@@ -16,7 +16,7 @@ namespace CustomIdentityApp.Controllers
         private readonly SignInManager<User> _signInManager;
         private readonly IStringLocalizer<AccountController> _localizer;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<IdentityRole> roleManager, IStringLocalizer<AccountController> localizer)
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, IStringLocalizer<AccountController> localizer)
         {
             _userManager = userManager;
             _signInManager = signInManager;
