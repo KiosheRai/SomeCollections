@@ -172,10 +172,11 @@ namespace SomeCollections.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Delete(Guid id)
+        public async Task<ActionResult> Delete(Guid id, string returnUrl)
         {
             Collection col = _db.Collections.FirstOrDefault(p => p.Id == id);
             var items = _db.Items.Include(x=>x.Likes).Include(x=>x.Messages).Where(p => p.Collection.Id == id).ToList();
+
             if (col == null)
             {
                 return NotFound();
@@ -189,7 +190,7 @@ namespace SomeCollections.Controllers
             _db.Collections.Remove(col);
 
             await _db.SaveChangesAsync();
-            return RedirectToAction("Index");
+            return LocalRedirect(returnUrl);
         }
     }
 }

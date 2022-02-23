@@ -48,7 +48,7 @@
             {
                 <div class="col-md-4">
                     <div class="card mb-4">
-                        <form asp-action="Delete" asp-route-id="@item.Id" method="post">
+                        <form asp-action="Delete" asp-route-id="@item.Id" asp-route-returnUrl="@Context.Request.Path" method="post">
 
                             <div class="card-body">
                                 <h4 class="card-title text-center">@item.Name</h4>

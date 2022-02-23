@@ -27,6 +27,7 @@ namespace CustomIdentityApp.Controllers
         {
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
@@ -50,6 +51,7 @@ namespace CustomIdentityApp.Controllers
             }
             return View(model);
         }
+
         [HttpGet]
         public IActionResult Login(string returnUrl = null)
         {
