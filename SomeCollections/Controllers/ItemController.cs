@@ -80,6 +80,7 @@ namespace SomeCollections.Controllers
                 await _db.SaveChangesAsync();
                 return RedirectToAction("Index", "Item", new { Id });
             }
+            ViewBag.CollectionId = Id;
             return View(model);
         }
 

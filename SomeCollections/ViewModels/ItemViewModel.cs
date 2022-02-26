@@ -9,7 +9,8 @@ namespace SomeCollections.ViewModels
         [Required(ErrorMessage = "Emptyfield")]
         [Display(Name = "Name")]
         public string Name { get; set; }
-        [Required(ErrorMessage = "Emptyfield")]
+
+        //[Required(ErrorMessage = "Emptyfield")]
         [Display(Name = "Description")]
         public string Description { get; set; }
 

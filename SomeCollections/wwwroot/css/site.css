@@ -77,3 +77,20 @@ body {
     max-height: 100px;
     margin-bottom: 1rem;
 }
+
+.thumb-case {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.img-case{
+    width: 100%;
+    height: 250px;
+}
+
+.text-description-height{
+    padding: 0px;
+    height: 72px;
+}

@@ -52,13 +52,16 @@
 
                             <div class="card-body">
                                 <h4 class="card-title text-center">@item.Name</h4>
-                                <div class="border border-success rounded-3">
-                                    <img class="img-fluid" src="@Url.Content(item.ImgPath)" />
+                                <div class="border border-success rounded-3 img-case">
+                                        <img class="thumb-case" src="@Url.Content(item.ImgPath)" />
                                 </div>
                                 <h6 class="card-subtitle mb-2 mt-2 text-muted text-center">@Localizer["Author"]: @item.Owner.UserName</h6>
-                                <p class="card-text">@item.Description</p>
+                                <div class="text-description-height">
+                                    <p class="card-text">@item.Description</p>
+                                </div>
                                 <h5 class="text-muted">#@item.Tag.Name</h5>
                                 <h6 class="text-muted">@Localizer["Count"]: @item.CountItems</h6>
+
                                 <a class="btn btn-sm btn-primary text-white" asp-controller="Item" asp-action="Index" asp-route-id="@item.Id">@Localizer["btnShow"]</a>
                                 @if (User.Identity.IsAuthenticated)
                                 {
