@@ -42,19 +42,26 @@ namespace CustomIdentityApp.Controllers
         {
             User user = await _userManager.FindByIdAsync(id);
             List<Collection> collection = _db.Collections.Include(x=>x.Items).Where(x=>x.Owner.Id == user.Id).ToList();
+            List<Like> likes = _db.Likes.Where(x => x.User.Id == user.Id).ToList();
+            List<Message> messages = _db.Messages.Where(x => x.Sender.Id == user.Id).ToList();
 
-            if (user != null)
+            if (user == null)
             {
-                foreach(var col in collection)
-                {
-                    var items = _db.Items.Include(x => x.Likes).Include(x => x.Messages).Where(p => p.Collection.Id == col.Id).ToList();
-                    foreach(var item in items)
-                    {
-                        _db.Items.Remove(item);
-                    }
-                    _db.Collections.Remove(col);
-                }
+                return NotFound();
             }
+
+            foreach (var col in collection)
+            {
+                var items = _db.Items.Include(x => x.Likes).Include(x => x.Messages).Where(p => p.Collection.Id == col.Id).ToList();
+
+                _db.Items.RemoveRange(items);
+
+                _db.Collections.Remove(col);
+            }
+
+            _db.Likes.RemoveRange(likes);
+            _db.Messages.RemoveRange(messages);
+
             await _db.SaveChangesAsync();
             IdentityResult result = await _userManager.DeleteAsync(user);
             
