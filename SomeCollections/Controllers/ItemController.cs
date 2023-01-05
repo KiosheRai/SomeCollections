@@ -16,13 +16,11 @@ namespace SomeCollections.Controllers
     public class ItemController : Controller
     {
         private readonly ApplicationContext _db;
-        IWebHostEnvironment _appEnvironment;
+        private readonly IWebHostEnvironment _appEnvironment;
 
-        public ItemController(ApplicationContext db, IWebHostEnvironment appEnvironment)
-        {
-            _db = db;
-            _appEnvironment = appEnvironment;
-        }
+        public ItemController(ApplicationContext db, IWebHostEnvironment appEnvironment) =>
+            (_db, _appEnvironment) = (db, appEnvironment);
+        
         [AllowAnonymous]
         public IActionResult Index(Guid Id, SortState sortOrder = SortState.NameAsc)
         {
@@ -87,18 +85,15 @@ namespace SomeCollections.Controllers
 
         private async Task<string> UploadImg(IFormFile uploadedFile)
         {
-            string path = null;
-            if (uploadedFile != null)
+            string defaultPath = "/imgItems/default.jpg";
+
+            if (uploadedFile == null)
+                return defaultPath;
+
+            string path = "/imgItems/" + HashGenerator.Generate(uploadedFile.FileName);
+            using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
             {
-                path = "/imgItems/" + uploadedFile.FileName;
-                using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
-                {
-                    await uploadedFile.CopyToAsync(fileStream);
-                }
-            }
-            else
-            {
-                path = "/imgItems/default.jpg";
+                await uploadedFile.CopyToAsync(fileStream);
             }
 
             return path;
@@ -137,7 +132,6 @@ namespace SomeCollections.Controllers
         [HttpPost]
         public async Task<ActionResult> Delete(Guid id)
         {
-            
             Item item = _db.Items.Include(x=>x.Collection).Include(x=>x.Likes).Include(x=>x.Messages).FirstOrDefault(p => p.Id == id);
             Collection col = _db.Collections.FirstOrDefault(p=>p.Id == item.Collection.Id);
             

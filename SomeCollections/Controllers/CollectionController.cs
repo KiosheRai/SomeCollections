@@ -119,18 +119,15 @@ namespace SomeCollections.Controllers
 
         private async Task<string> UploadImg (IFormFile uploadedFile)
         {
-            string path = null;
-            if (uploadedFile != null)
+            string defaultPath = "/imgCollections/default.jpg";
+
+            if (uploadedFile == null)
+                return defaultPath;
+
+            string path = "/imgCollections/" + HashGenerator.Generate(uploadedFile.FileName);
+            using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
             {
-                path = "/imgCollections/" + uploadedFile.FileName;
-                using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
-                {
-                    await uploadedFile.CopyToAsync(fileStream);
-                }
-            }
-            else
-            {
-                path = "/imgCollections/default.jpg";
+                await uploadedFile.CopyToAsync(fileStream);
             }
 
             return path;
