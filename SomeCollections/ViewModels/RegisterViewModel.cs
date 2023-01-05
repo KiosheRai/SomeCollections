@@ -14,7 +14,7 @@ namespace SomeCollections.ViewModels
 
         [Required(ErrorMessage = "Emptyfield")]
         [DataType(DataType.Password)]
-        [StringLength(12, ErrorMessage = "ErrorLength", MinimumLength = 4)]
+        [StringLength(12, ErrorMessage = "Password length less than 4", MinimumLength = 4)]
         [Display(Name = "Пароль")]
         public string Password { get; set; }
 

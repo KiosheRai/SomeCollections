@@ -15,7 +15,7 @@ namespace SomeCollections.ViewModels
         public string Description { get; set; }
 
         [Display(Name = "Img")]
-        [MaxFileSize(1 * 1080 * 1080)]
+        [MaxFileSize(2 * 1920 * 1080)]
         [AvailableImgFormat(new string[] { ".jpg", ".png", ".gif", ".jpeg" })]
         public IFormFile Img { get; set; }
     }
