@@ -119,12 +119,23 @@ namespace SomeCollections.Controllers
 
         private async Task<string> UploadImg (IFormFile uploadedFile)
         {
-            string defaultPath = "/imgCollections/default.jpg";
+            string defaultPath = "/pic/default.jpg";
 
             if (uploadedFile == null)
                 return defaultPath;
 
-            string path = "/imgCollections/" + HashGenerator.Generate(uploadedFile.FileName);
+            string path = "/imgCollections/" + uploadedFile.FileName;
+
+            FileInfo fileInf = new FileInfo(_appEnvironment.WebRootPath + path);
+            nint temp = 0;
+
+            while (fileInf.Exists)
+            {
+                fileInf = new FileInfo(_appEnvironment.WebRootPath + path);
+                path = "/imgCollections/" + temp + uploadedFile.FileName;
+                temp++;
+            }
+
             using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
             {
                 await uploadedFile.CopyToAsync(fileStream);
@@ -181,9 +192,17 @@ namespace SomeCollections.Controllers
 
             foreach(var x in items)
             {
+                string path = _appEnvironment.WebRootPath + x.ImgPath;
+                FileInfo fileInf = new FileInfo(path);
+                if (fileInf.Exists)
+                    fileInf.Delete();
                 _db.Items.Remove(x);
             }
 
+            string path1 = _appEnvironment.WebRootPath + col.ImgPath;
+            FileInfo fileInf1 = new FileInfo(path1);
+            if (fileInf1.Exists)
+                fileInf1.Delete();
             _db.Collections.Remove(col);
 
             await _db.SaveChangesAsync();

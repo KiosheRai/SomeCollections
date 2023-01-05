@@ -20,7 +20,7 @@ namespace SomeCollections.Controllers
 
         public ItemController(ApplicationContext db, IWebHostEnvironment appEnvironment) =>
             (_db, _appEnvironment) = (db, appEnvironment);
-        
+
         [AllowAnonymous]
         public IActionResult Index(Guid Id, SortState sortOrder = SortState.NameAsc)
         {
@@ -44,8 +44,8 @@ namespace SomeCollections.Controllers
         [AllowAnonymous]
         public IActionResult CurrentItem(Guid Id)
         {
-            var item = _db.Items.Include(s=>s.Collection).Include(o=>o.Owner).FirstOrDefault(p => p.Id == Id);
-            ViewBag.Comments = _db.Messages.Include(s=>s.Sender).Where(s => s.Item.Id == item.Id); 
+            var item = _db.Items.Include(s => s.Collection).Include(o => o.Owner).FirstOrDefault(p => p.Id == Id);
+            ViewBag.Comments = _db.Messages.Include(s => s.Sender).Where(s => s.Item.Id == item.Id);
             return View(item);
         }
 
@@ -63,7 +63,7 @@ namespace SomeCollections.Controllers
         {
             if (ModelState.IsValid)
             {
-                Collection col = _db.Collections.FirstOrDefault(p=>p.Id == Id);
+                Collection col = _db.Collections.FirstOrDefault(p => p.Id == Id);
                 col.CountItems += 1;
                 Item item = new Item
                 {
@@ -85,12 +85,23 @@ namespace SomeCollections.Controllers
 
         private async Task<string> UploadImg(IFormFile uploadedFile)
         {
-            string defaultPath = "/imgItems/default.jpg";
+            string defaultPath = "/pic/default.jpg";
 
             if (uploadedFile == null)
                 return defaultPath;
 
-            string path = "/imgItems/" + HashGenerator.Generate(uploadedFile.FileName);
+            string path = "/imgItems/" + uploadedFile.FileName;
+
+            FileInfo fileInf = new FileInfo(_appEnvironment.WebRootPath + path);
+            nint temp = 0;
+
+            while (fileInf.Exists)
+            {
+                fileInf = new FileInfo(_appEnvironment.WebRootPath + path);
+                path = "/imgItems/" + temp + uploadedFile.FileName;
+                temp++;
+            }
+
             using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
             {
                 await uploadedFile.CopyToAsync(fileStream);
@@ -103,7 +114,7 @@ namespace SomeCollections.Controllers
         [Authorize]
         public IActionResult Edit(Guid id)
         {
-            var item = _db.Items.Include(x=>x.Collection).FirstOrDefault(p => p.Id == id);
+            var item = _db.Items.Include(x => x.Collection).FirstOrDefault(p => p.Id == id);
             ViewBag.Name = item.Name;
             ViewBag.ItemId = item.Id;
             ViewBag.ColId = item.Collection.Id;
@@ -119,7 +130,7 @@ namespace SomeCollections.Controllers
         [Authorize]
         public async Task<IActionResult> Edit(Guid id, ItemViewModel model)
         {
-            Item s = _db.Items.Include(x=>x.Collection).FirstOrDefault(p => p.Id == id);
+            Item s = _db.Items.Include(x => x.Collection).FirstOrDefault(p => p.Id == id);
             s.Name = model.Name;
             s.Description = model.Description;
             s.ImgPath = await UploadImg(model.Img);
@@ -132,19 +143,21 @@ namespace SomeCollections.Controllers
         [HttpPost]
         public async Task<ActionResult> Delete(Guid id)
         {
-            Item item = _db.Items.Include(x=>x.Collection).Include(x=>x.Likes).Include(x=>x.Messages).FirstOrDefault(p => p.Id == id);
-            Collection col = _db.Collections.FirstOrDefault(p=>p.Id == item.Collection.Id);
-            
-            if (item != null && col != null)
-            {
-                col.CountItems -= 1;
-                _db.Items.Remove(item);
-                await _db.SaveChangesAsync();
-            }
-            else
-            {
+            Item item = _db.Items.Include(x => x.Collection).Include(x => x.Likes).Include(x => x.Messages).FirstOrDefault(p => p.Id == id);
+            Collection col = _db.Collections.FirstOrDefault(p => p.Id == item.Collection.Id);
+
+            if (item == null || col == null)
                 return NotFound();
-            }
+
+            string path = _appEnvironment.WebRootPath + item.ImgPath;
+            FileInfo fileInf = new FileInfo(path);
+            if (fileInf.Exists)
+                fileInf.Delete();
+            
+            col.CountItems -= 1;
+            _db.Items.Remove(item);
+            await _db.SaveChangesAsync();
+
             return RedirectToAction("Index", "Item", new { col.Id });
         }
     }
